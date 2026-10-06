@@ -1,12 +1,12 @@
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
+import { createStackNavigator } from '@react-navigation/stack'
 
-import home from "../screens/home"
+import login from '../screens/login'
 
-const Tab = createBottomTabNavigator();
+
+const stack = createStackNavigator();
 
 export default () => (
-    
-        <Tab.Navigator initialRouteName="home" screenOptions={{headerShown:false}}>
-            <Tab.Screen name="home" component={home}  />
-        </Tab.Navigator>
+    <stack.Navigator initialRouteName='login' screenOptions={{ headerShown: false }}>
+        <stack.Screen name='login' component={login} />
+    </stack.Navigator>
 )
