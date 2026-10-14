@@ -10,9 +10,9 @@ import styled from "./styled";
 export default () => {
 
     const [imagePassowrd, setImagePassowrd] = useState("eye-off");
-    const [passowrdFild, setPassowrdFild] = useState("123");
+    const [passowrdFild, setPassowrdFild] = useState("");
     const [emailFild, setEmailFild] = useState('');
-    const [seePassowrd, setSeePassowrd] = useState(true);
+    const [seePassowrd, setSeePassowrd] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const Navigator = useNavigation();
