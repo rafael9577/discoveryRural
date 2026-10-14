@@ -17,8 +17,8 @@ export default () => {
 
     const Navigator = useNavigation();
 
-    const userNavigate = async () => {
-        
+    const tohome = () => {
+        Navigator.navigate("userRouts");
     }
 
     async function handleLoginButtonClick() {
@@ -46,7 +46,7 @@ export default () => {
     return (
         <SafeAreaView style={styled.safeArea}>
             <View style= {styled.inputArea}>
-                <Image style= {{ width: 128, height:128, alignSelf: 'center'}}source={require('../../../assets/logoDiscoveryRuralWhite.png')} /> 
+                <Image style= {{ width: 128, height:128, alignSelf: 'center'}}source={require('https://github.com/rafael9577/discoveryRural/blob/main/front-end/assets/logoDiscoveryRuralWhite.png')} /> 
                 <View style={styled.singInPut}>
                     <TextInput 
                         style={styled.textInput}
@@ -75,7 +75,7 @@ export default () => {
             </View>
         
             <View >
-                <TouchableOpacity style={styled.custtomButton} >
+                <TouchableOpacity style={styled.custtomButton} onPress={tohome}>
                     <Text style={styled.customButtontext}>Login</Text>
                 </TouchableOpacity>
 
