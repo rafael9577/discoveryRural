@@ -3,7 +3,7 @@ import { createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 
 const tabs = createBottomTabNavigator();
 
-import home from "../screens/home"
+import home from "../screens/userPage/home"
 
 export default() => {
     <tabs.Navigator initialRouteName='home' screenOptions={false} >
