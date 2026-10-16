@@ -6,6 +6,5 @@ export default StyleSheet.create({
         borderColor: "black",
         borderWidth:5,
         width: "70%",
-    },
-    safeArea
+    }
 })

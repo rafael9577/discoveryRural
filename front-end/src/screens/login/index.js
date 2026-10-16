@@ -46,7 +46,7 @@ export default () => {
     return (
         <SafeAreaView style={styled.safeArea}>
             <View style= {styled.inputArea}>
-                <Image style= {{ width: 128, height:128, alignSelf: 'center'}}source={require('https://github.com/rafael9577/discoveryRural/blob/main/front-end/assets/logoDiscoveryRuralWhite.png')} /> 
+                <Image style= {{ width: 128, height:128, alignSelf: 'center'}}source={{uri: "https://github.com/rafael9577/discoveryRural/blob/main/front-end/assets/logoDiscoveryRuralWhite.png?raw=true"}} /> 
                 <View style={styled.singInPut}>
                     <TextInput 
                         style={styled.textInput}
