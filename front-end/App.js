@@ -1,12 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native'
 import Toast from 'react-native-toast-message';
 
-import Main_routs from "./src/stacks/Main_routs"
+import MainStack from "./src/navigation/MainStack"
 
 export default function App() {
   return (
     <NavigationContainer>
-        <Main_routs/>
+        <MainStack/>
         <Toast/>
     </NavigationContainer>
   );
