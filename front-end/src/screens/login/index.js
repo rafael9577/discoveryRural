@@ -17,10 +17,11 @@ export default () => {
 
     const Navigator = useNavigation();
 
-    const navegar = () => {
-        
-            Navigator.navigate("signup")
-   
+    const toLogin = () => {
+        Navigator.replace("tabsRouts")
+    }
+    const tosignUp = () => {
+        Navigator.navigate("signup");
     }
 
     async function handleLoginButtonClick() {
@@ -77,21 +78,21 @@ export default () => {
             </View>
         
             <View >
-                <TouchableOpacity style={styled.custtomButton} onPress={''}>
+                <TouchableOpacity style={styled.custtomButton} onPress={toLogin}>
                     <Text style={styled.customButtontext}>Login</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={navegar} style={styled.singMessageButto} >
+                <TouchableOpacity onPress={tosignUp} style={styled.singMessageButto} >
                     <Text>Ainda não possui uma conta?</Text>
                     <Text style={styled.singMessageButtonTextBold}>Cadastre-se</Text>
                 </TouchableOpacity>    
             </View>
 
-                <Modal
-                    transparent={true}
-                    animationType="none"
-                    visible={loading}
-                    />
+            <Modal
+                transparent={true}
+                animationType="none"
+                visible={loading}
+            />
 
         </SafeAreaView>
     );
