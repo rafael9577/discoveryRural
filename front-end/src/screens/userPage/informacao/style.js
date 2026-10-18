@@ -6,6 +6,7 @@ export default StyleSheet.create({
         borderRadius:20,
     },
     buscaInput:{
+        marginTop:20,
         backgroundColor:'gray',
         borderRadius:20,
         borderWidth:1,

@@ -8,34 +8,32 @@ import styled from "./styled";
 
 
 export default () => {
-    // blabla
-    // navegação
     const navigation = useNavigation();
 
-    // estados de memoria
+
     const [emailFild, setEmailFild] = useState("");
     const [passowrdFild, setPassowrdFild] = useState("");
     const [passowrdFild1, setPassowrdFild1] = useState("");
     const [seePass, setSeePass] = useState(true);
     const [seePass1, setSeePass1] = useState(true);
 
-    // ações
     const handleSignUp = () => {
     // PRECISA TAMBEM CHAMAR A API PARA VALIDAR SE O USUARIO EXISTE?
-    if (emailFild === '' || passowrdFild === '' || passowrdFild1 === '') { // Verifica se algum campo está vazio
+    if (emailFild === '' || passowrdFild === '' || passowrdFild1 === '') {
         alert("Preencha todos os campos!");
         return; 
     }
 
-    if (passowrdFild !== passowrdFild1) { // 2. Verifica se as senhas não conferem
+    if (passowrdFild !== passowrdFild1) {
         alert("As senhas não coincidem!");
         return; 
     }
-        console.log("Botão 'Cadastrar' foi clicado. Cadastrado:", emailFild);};
-    const toLogin = () => {
-        console.log("Botão 'Já possui uma conta?' foi clicado");
-        navigation.navigate("login");};
+    }
 
+    const toLogin = () => {
+        navigation.navigate("login");
+    };
+    
 
         
 
@@ -57,8 +55,8 @@ export default () => {
                         style={styled.textInput}
                         placeholder="insira a senha"
                         placeholderTextColor="#666666"
-                        secureTextEntry={seePass} // para ocultar os caracteres
-                        value={passowrdFild}   //
+                        secureTextEntry={seePass} 
+                        value={passowrdFild}   
                         onChangeText={t => setPassowrdFild(t)}
                     />
                     <TouchableOpacity onPress={() => setSeePass(!seePass)} style={{ marginRight: 12 }}>
@@ -75,8 +73,8 @@ export default () => {
                         style={styled.textInput}
                         placeholder="confirme a senha"
                         placeholderTextColor="#666666"
-                        secureTextEntry={seePass1} // para ocultar os caracteres
-                        value={passowrdFild1}   //
+                        secureTextEntry={seePass1} 
+                        value={passowrdFild1}   
                         onChangeText={t => setPassowrdFild1(t)}
                     />
                     <TouchableOpacity onPress={() => setSeePass1(!seePass1)} style={{ marginRight: 12 }}>
@@ -87,16 +85,15 @@ export default () => {
                         />
                     </TouchableOpacity>
                 </View>
-        
+
             </View>
-                <TouchableOpacity style={styled.custtomButton} onPress={handleSignUp}>
-                    <Text style={styled.customButtontext}>Cadastrar</Text>
-                </TouchableOpacity>  
+            <TouchableOpacity style={styled.custtomButton} onPress={handleSignUp}>
+                <Text style={styled.customButtontext}>Cadastrar</Text>
+            </TouchableOpacity>  
 
-                <TouchableOpacity onPress={toLogin}>
-                    <Text style={styled.customButtontext2}> Já possui uma conta? </Text>
-                </TouchableOpacity>
-
+            <TouchableOpacity onPress={toLogin}>
+                <Text style={styled.customButtontext2}> Já possui uma conta? </Text>
+            </TouchableOpacity>
         </SafeAreaView>
     );
 }

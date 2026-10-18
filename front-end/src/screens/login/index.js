@@ -17,8 +17,10 @@ export default () => {
 
     const Navigator = useNavigation();
 
-    const tohome = () => {
-        Navigator.replace("userRouts");
+    const navegar = () => {
+        
+            Navigator.navigate("signup")
+   
     }
 
     async function handleLoginButtonClick() {
@@ -75,11 +77,11 @@ export default () => {
             </View>
         
             <View >
-                <TouchableOpacity style={styled.custtomButton} onPress={tohome}>
+                <TouchableOpacity style={styled.custtomButton} onPress={''}>
                     <Text style={styled.customButtontext}>Login</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={''} style={styled.singMessageButto} >
+                <TouchableOpacity onPress={navegar} style={styled.singMessageButto} >
                     <Text>Ainda não possui uma conta?</Text>
                     <Text style={styled.singMessageButtonTextBold}>Cadastre-se</Text>
                 </TouchableOpacity>    
