@@ -18,7 +18,7 @@ export default () => {
     const Navigator = useNavigation();
 
     const tohome = () => {
-        Navigator.navigate("userRouts");
+        Navigator.replace("userRouts");
     }
 
     async function handleLoginButtonClick() {

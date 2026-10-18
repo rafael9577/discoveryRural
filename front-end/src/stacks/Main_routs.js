@@ -7,7 +7,7 @@ import tabsRouts from './tabs_routs'
 const stack = createStackNavigator();
 
 export default () => (
-    <stack.Navigator initialRouteName='login' screenOptions={{ headerShown: false }}>
+    <stack.Navigator initialRouteName='userRouts' screenOptions={{ headerShown: false }}>
         <stack.Screen name='login' component={login} />
         <stack.Screen name='singup' component={singUp} />
         <stack.Screen name='userRouts' component={tabsRouts}/>

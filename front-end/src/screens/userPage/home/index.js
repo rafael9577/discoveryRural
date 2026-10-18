@@ -8,10 +8,13 @@ import styled from "./styled";
 
 export default () => {
 
-    <SafeAreaView>
-        <View style={styled.cardAnimal}>
+    return (
+        <SafeAreaView style={styled.safeArea}>
+            <View style= {styled.cardAnimal}>
+                <Text>imagem</Text>
+                <Text>Titulo</Text>
+                <Text>Descrição</Text>
+            </View>        
+        </SafeAreaView>
 
-        </View>
-    </SafeAreaView>
-
-}
+)};
