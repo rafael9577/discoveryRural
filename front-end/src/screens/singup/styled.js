@@ -54,9 +54,10 @@ export default StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        color: "#000000",
+        color: "#ff0404",
         fontSize: 16,
-        marginLeft: 10,
+        marginLeft: 20,
+        borderColor: 'white'
     },
     forgotPassowrd: {
         marginRight:20,
