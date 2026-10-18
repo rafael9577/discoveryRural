@@ -11,10 +11,10 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
-	"os"
-
+	"github.com/joho/godotenv"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
@@ -74,10 +74,12 @@ func createPlaceholderImage() []byte {
 }
 
 func main() {
+	_ = godotenv.Load()
+
 	url := os.Getenv("TURSO_DATABASE_URL")
 	token := os.Getenv("TURSO_AUTH_TOKEN")
 	if url == "" || token == "" {
-		log.Fatal("defina TURSO_DATABASE_URL e TURSO_AUTH_TOKEN")
+		log.Fatal("defina TURSO_DATABASE_URL e TURSO_AUTH_TOKEN (via .env ou variáveis de ambiente)")
 	}
 
 	db, err := sql.Open("libsql", url+"?authToken="+token)
