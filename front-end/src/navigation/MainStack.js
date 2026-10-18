@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack'
 
 import login from '../screens/login'
-import singUp from '../screens/singup'
-import tabsRouts from './tabs_routs'
+import singUp from '../screens/signup'
+import tabsRouts from './TabsNavigator'
 
 const stack = createStackNavigator();
 
