@@ -12,7 +12,7 @@ export default () => {
             <TouchableOpacity style={styled.cardContainer} onPress={''} activeOpacity={0.8}>
                 <ImageBackground source={{ uri: "https://www.infoescola.com/wp-content/uploads/2018/03/sagui-de-tufos-brancos_790108426-1000x667.jpg" }} style={styled.cardBackground} imageStyle={styled.imageStyle} >
                     <View style={styled.overlay}>
-                        <Text style={styled.cardText}>{ "Meu Card"}</Text>
+                        <Text style={styled.cardText}>{"Meu Card"}</Text>
                     </View>
                 </ImageBackground>
             </TouchableOpacity>

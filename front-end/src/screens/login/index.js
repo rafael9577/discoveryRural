@@ -6,20 +6,18 @@ import { Feather } from "@expo/vector-icons"
 import { useState } from 'react';
 import styled from "./styled";
 
+import * as Api from "../../../services/API"
 
 export default () => {
 
     const [imagePassowrd, setImagePassowrd] = useState("eye-off");
     const [passowrdFild, setPassowrdFild] = useState("");
     const [emailFild, setEmailFild] = useState('');
-    const [seePassowrd, setSeePassowrd] = useState(false);
+    const [seePassowrd, setSeePassowrd] = useState(true);
     const [loading, setLoading] = useState(false);
 
     const Navigator = useNavigation();
 
-    const toLogin = () => {
-        Navigator.replace("tabsRouts")
-    }
     const tosignUp = () => {
         Navigator.navigate("signup");
     }
@@ -27,13 +25,31 @@ export default () => {
     async function handleLoginButtonClick() {
         if (emailFild != '' && passowrdFild != '') {
             setLoading(true)
-            try{
-                // chamar a API para validar o usuario
-                true
-            } catch (error){
-                // retornar o erro que deu ao tentar validar
-                Toast
+            try {
+                let reqLogin = await Api.UserSingIn(emailFild.trim().toLocaleLowerCase(), passowrdFild.trim())
+                if (Object.keys(reqLogin)[0] == 'error') {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Email ou senha invalido'
+                    })
+                } else {
+                    console.log(reqLogin)
+                    Navigator.replace("tabsRouts");
+                }
+            } catch (error) {
+                console.log(error)
+                Toast.show({
+                    type: 'error',
+                    text1: error.message
+                })
+            } finally {
+                setLoading(false)
             }
+        } else {
+            Toast.show({
+                type: 'info',
+                text1: "Preencha todos os campos",
+            });
         }
     }
 
@@ -75,13 +91,13 @@ export default () => {
                 </View>
                 
                 <Text style={styled.forgotPassowrd}>Esqueci a senha</Text>
-            </View>
-        
-            <View >
-                <TouchableOpacity style={styled.custtomButton} onPress={toLogin}>
+                
+                <TouchableOpacity style={styled.custtomButton} onPress={handleLoginButtonClick}>
                     <Text style={styled.customButtontext}>Login</Text>
                 </TouchableOpacity>
-
+            </View>
+        
+            <View  >
                 <TouchableOpacity onPress={tosignUp} style={styled.singMessageButto} >
                     <Text>Ainda não possui uma conta?</Text>
                     <Text style={styled.singMessageButtonTextBold}>Cadastre-se</Text>

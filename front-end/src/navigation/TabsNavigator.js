@@ -5,6 +5,12 @@ const tabs = createBottomTabNavigator();
 
 import home from "../screens/userPage/home"
 import busca from "../screens/userPage/informacao"
+import * as api from '../../services/API';
+
+async function sair() {
+    api.sair()
+    navigation.replace("login");
+}
 
 export default() => (
     <tabs.Navigator 
@@ -21,6 +27,8 @@ export default() => (
                     iconName = 'settings';
                 } else if (route.name === 'busca') {
                     iconName = 'search';
+                } else if (route.name === 'sair') {
+                    iconName = 'log-out';
                 }
                 return <Feather name={iconName} size={size} color={color} />;
             },
@@ -29,6 +37,6 @@ export default() => (
 
         <tabs.Screen name='home' component={home}/>
         <tabs.Screen name='busca' component={busca}/>
-
+        <tabs.Screen name='sair' component={sair} />
     </tabs.Navigator>
 )

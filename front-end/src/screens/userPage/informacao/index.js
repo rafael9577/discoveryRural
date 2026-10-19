@@ -11,7 +11,6 @@ export default () => {
             <View style={style.busca}>
                 <TextInput style={style.buscaInput} placeholder="aqui"/>
             </View>
-            
         </SafeAreaView>
     )
 }

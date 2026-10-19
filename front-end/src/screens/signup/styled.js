@@ -16,13 +16,13 @@ export default StyleSheet.create({
     },
     singInPut: {
         width: '100%',
-        height: 60,
+        height: 55,
         backgroundColor: '#A7F3D0',
         flexDirection: 'row',
         borderRadius: 30,
         paddingLeft: 15,
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 15,
     },
     custtomButton: {
         width: '75%',
@@ -32,7 +32,8 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderColor: 'black',
-        borderWidth:0.6,
+        borderWidth: 0.6,
+        marginBottom: 20,
     },
     customButtontext: {
         fontSize: 18,
@@ -80,8 +81,8 @@ export default StyleSheet.create({
     },
     ToastShow: {
     type: 'error',
-    text1: titulo,
-    text2: mensagem,
+    text1: '',
+    text2: '',
     position: 'bottom',
     visibilityTime: 3000,
     },

@@ -25,6 +25,7 @@ export default StyleSheet.create({
         marginTop: 10,
     },
     custtomButton: {
+        width:"100%",
         height: 60,
         backgroundColor: '#268596',
         borderRadius: 30,
