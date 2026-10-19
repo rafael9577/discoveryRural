@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"database/sql"
+	"crypto/subtle"
 	"encoding/json"
 	"image"
 	"image/color"
@@ -78,6 +79,8 @@ func main() {
 
 	url := os.Getenv("TURSO_DATABASE_URL")
 	token := os.Getenv("TURSO_AUTH_TOKEN")
+	adminKey := os.Getenv("ADMIN_KEY")
+
 	if url == "" || token == "" {
 		log.Fatal("defina TURSO_DATABASE_URL e TURSO_AUTH_TOKEN (via .env ou variáveis de ambiente)")
 	}
@@ -207,6 +210,16 @@ func main() {
 
 		r.ParseMultipartForm(10 << 20)
 
+		//Verificação da chave de admin
+		key := r.Header.Get("X-Admin-Key")
+		if key == "" {
+			key = r.FormValue("admin_key")
+		}
+		if adminKey == "" || subtle.ConstantTimeCompare([]byte(key), []byte(adminKey)) != 1 {
+			http.Error(w, "Não autorizado", http.StatusUnauthorized)
+			return
+		}
+
 		nomePopular := r.FormValue("nome_popular")
 		nomeCientifico := r.FormValue("nome_cientifico")
 		breveDescricao := r.FormValue("breve_descricao")
@@ -270,8 +283,15 @@ func main() {
 		w.Write(imgBytes)
 	})
 
-	log.Println("Servidor rodando em http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	//Se for definido outra porta com: $env:PORT = "..."
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	//Porta padrão
+	log.Println("Servidor rodando na porta " + port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 const htmlPage = `<!DOCTYPE html>
@@ -375,6 +395,10 @@ const htmlPage = `<!DOCTYPE html>
                 <label>Foto do Animal:</label>
                 <input type="file" name="imagem" accept="image/*" required>
             </div>
+			<div class="form-group">
+                <label>Chave de Administrador:</label>
+                <input type="password" name="admin_key" required>
+            </div>
             <button type="submit">Salvar Nova Espécie</button>
         </form>
     </div>
@@ -407,6 +431,8 @@ const htmlPage = `<!DOCTYPE html>
 
     <div id="conteudo">Carregando...</div>
     <script>
+		const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
         function abrirModal() {
             document.getElementById('bitmapModal').style.display = 'flex';
         }
@@ -433,9 +459,9 @@ const htmlPage = `<!DOCTYPE html>
                     }
                     div.innerHTML = '<h3>Lista de Espécies Cadastradas</h3>' + data.map(a => ` + "`" + `
                         <div class="card" onclick="carregarDetalhe(${a.id})">
-                            <img src="${a.imagem_url}" alt="${a.nome_popular}">
+                            <img src="${a.imagem_url}" alt="${esc(a.nome_popular)}">
                             <div class="info">
-                                <h2>ID ${a.id} -${a.nome_popular}</h2>
+                                <h2>ID ${a.id} - ${esc(a.nome_popular)}</h2>
                                 <button>Ver Detalhes</button>
                             </div>
                         </div>
@@ -451,21 +477,21 @@ const htmlPage = `<!DOCTYPE html>
                     div.innerHTML = ` + "`" + `
                         <button onclick="carregarLista()" style="margin-bottom: 15px;">← Voltar</button>
                         <div class="card" style="cursor: default;">
-                            <img src="${a.imagem_url}" alt="${a.nome_popular}">
+                            <img src="${a.imagem_url}" alt="${esc(a.nome_popular)}">
                             <div class="info">
-                                <h2>${a.nome_popular} <span class="cientifico">(${a.nome_cientifico})</span></h2>
-                                <p>${a.breve_descricao}</p>
+                                <h2>${esc(a.nome_popular)} <span class="cientifico">(${esc(a.nome_cientifico)})</span></h2>
+                                <p>${esc(a.breve_descricao)}</p>
                                 <div>
-                                    <span class="badge">Hábito: ${a.habito}</span>
-                                    <span class="badge">Conservação: ${a.estado_conservacao}</span>
+                                    <span class="badge">Hábito: ${esc(a.habito)}</span>
+                                    <span class="badge">Conservação: ${esc(a.estado_conservacao)}</span>
                                     <span class="badge">Raridade: ${a.raridade}/5</span>
                                     <span class="badge">Bitmap ID: ${a.bitmap_id}</span>${a.peconhento ? '<span class="badge" style="background:#dc3545; color:white;">Peçonhento</span>' : ''}
                                 </div>
-                                <p><strong>Vocalização / Postura:</strong> ${a.vocalizacao_postura}</p>
+                                <p><strong>Vocalização / Postura:</strong> ${esc(a.vocalizacao_postura)}</p>
                                 <div class="warning">
-                                    <strong>⚠️ Aviso de Segurança:</strong> ${a.aviso_seguranca}<br>
-                                    <strong>Protocolo:</strong> ${a.protocolo_incidente}<br>
-                                    <strong>Resgate:</strong> ${a.contatos_resgate}
+                                    <strong>⚠️ Aviso de Segurança:</strong> ${esc(a.aviso_seguranca)}<br>
+                                    <strong>Protocolo:</strong> ${esc(a.protocolo_incidente)}<br>
+                                    <strong>Resgate:</strong> ${esc(a.contatos_resgate)}
                                 </div>
                             </div>
                         </div>
