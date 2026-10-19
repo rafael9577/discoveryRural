@@ -25,6 +25,7 @@ export default StyleSheet.create({
         marginTop: 10,
     },
     custtomButton: {
+        width: '75%',
         height: 60,
         backgroundColor: '#268596',
         borderRadius: 30,
@@ -40,6 +41,7 @@ export default StyleSheet.create({
      customButtontext2: {
         fontSize: 18,
         color: '#00A8FF',
+        marginVertical: 20
     },
     singMessageButto: {
         flexDirection: 'row',
@@ -48,15 +50,15 @@ export default StyleSheet.create({
     },
     singMessageButtonTextBold: {
         fontSize: 16,
-        color: 'black',
+        color: '#00A8FF',
         fontWeight: 'bold',
         marginLeft: 5,
     },
     textInput: {
         flex: 1,
-        color: "#ff0404",
+        color: "#010e14",
         fontSize: 16,
-        marginLeft: 20,
+        marginLeft: 10,
         borderColor: 'white'
     },
     forgotPassowrd: {
@@ -75,6 +77,13 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0, 0.5)',
         zIndex: 1,
+    },
+    ToastShow: {
+    type: 'error',
+    text1: titulo,
+    text2: mensagem,
+    position: 'bottom',
+    visibilityTime: 3000,
     },
     
 })
