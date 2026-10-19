@@ -5,7 +5,7 @@ go 1.27.2
 require (
 	github.com/joho/godotenv v1.5.1
 	github.com/tursodatabase/libsql-client-go v0.0.0-20260528064733-9d5d30a29a60
-	golang.org/x/crypto v0.22.0
+	golang.org/x/crypto v0.58.0
 )
 
 require (
