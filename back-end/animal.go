@@ -15,7 +15,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/joho/godotenv"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
@@ -74,12 +73,9 @@ func createPlaceholderImage() []byte {
 	return processImage(img)
 }
 
-func main() {
-	_ = godotenv.Load()
-
+func registrarAnimais(adminKey string) {
 	url := os.Getenv("TURSO_DATABASE_URL")
 	token := os.Getenv("TURSO_AUTH_TOKEN")
-	adminKey := os.Getenv("ADMIN_KEY")
 
 	if url == "" || token == "" {
 		log.Fatal("defina TURSO_DATABASE_URL e TURSO_AUTH_TOKEN (via .env ou variáveis de ambiente)")
@@ -89,7 +85,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
 	_, err = db.Exec(`
 	CREATE TABLE IF NOT EXISTS animais (
@@ -282,16 +277,6 @@ func main() {
 		w.Header().Set("Content-Type", "image/jpeg")
 		w.Write(imgBytes)
 	})
-
-	//Se for definido outra porta com: $env:PORT = "..."
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	//Porta padrão
-	log.Println("Servidor rodando na porta " + port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 const htmlPage = `<!DOCTYPE html>
