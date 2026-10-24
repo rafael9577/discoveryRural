@@ -48,6 +48,7 @@ export default StyleSheet.create({
         color: 'black',
         fontWeight: 'bold',
         marginLeft: 5,
+        color: "#00A8FF"
     },
     textInput: {
         flex: 1,
@@ -58,6 +59,7 @@ export default StyleSheet.create({
         marginRight:20,
         marginBottom: 15,
         marginTop: 10,
+        color:"#fffff",
         alignSelf: "flex-end"
     },
     loadingOverlay: {

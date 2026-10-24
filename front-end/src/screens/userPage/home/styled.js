@@ -2,9 +2,10 @@ import {StyleSheet} from "react-native"
 
 export default StyleSheet.create({
     safeArea: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: "center"
+      backgroundColor: "#0A5133",
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: "center"
     },
     cardContainer: {
     width: '80%',

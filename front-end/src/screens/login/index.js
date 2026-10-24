@@ -11,8 +11,8 @@ import * as Api from "../../../services/API"
 export default () => {
 
     const [imagePassowrd, setImagePassowrd] = useState("eye-off");
-    const [passowrdFild, setPassowrdFild] = useState("");
-    const [emailFild, setEmailFild] = useState('');
+    const [passowrdFild, setPassowrdFild] = useState("12345678");
+    const [emailFild, setEmailFild] = useState('Rafael@ufrpe.com');
     const [seePassowrd, setSeePassowrd] = useState(true);
     const [loading, setLoading] = useState(false);
 
@@ -85,7 +85,7 @@ export default () => {
                         secureTextEntry={seePassowrd}
                         onChangeText={t => setPassowrdFild(t)}
                     />
-                    <TouchableOpacity  style={{ marginRight: 12 }} onPress={visibiliyPassowrd} >
+                    <TouchableOpacity  style={{ marginRight: 12 }} onPress={visibiliyPassowrd}>
                         <Feather name={imagePassowrd} size={20} color="black"/>
                     </TouchableOpacity>
                 </View>
@@ -98,8 +98,8 @@ export default () => {
             </View>
         
             <View  >
-                <TouchableOpacity onPress={tosignUp} style={styled.singMessageButto} >
-                    <Text>Ainda não possui uma conta?</Text>
+                <TouchableOpacity onPress={tosignUp} style={styled.singMessageButto}>
+                    <Text > Ainda não possui uma conta? </Text>
                     <Text style={styled.singMessageButtonTextBold}>Cadastre-se</Text>
                 </TouchableOpacity>    
             </View>
