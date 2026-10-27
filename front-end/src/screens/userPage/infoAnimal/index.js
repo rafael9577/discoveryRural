@@ -1,15 +1,47 @@
-import { View, Text, TouchableOpacity, ImageBackground } from "react-native";
-import { SafeAreaView, } from "react-native-safe-area-context";
+import React from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 
 import styled from "./styled";
 
-export default () => {
+export default ({ navigation }) => {
+  return (
+    <SafeAreaView style={styled.safeArea}>
+      {/* Cabeçalho */}
+      <View style={styled.containerCabecalho}>
+        <TouchableOpacity onPress={() => navigation?.goBack()}>
+          <Ionicons name="arrow-back" size={28} color="#FFFFFF" />
+        </TouchableOpacity>
+        <Text style={styled.tituloCabecalho}>Informações do animal</Text>
+      </View>
 
-    return (
-        <SafeAreaView style={styled.safeArea}>
-            <Text style={{alignSelf:'center', marginTop:50, fontSize: 25}}>Informações do animal</Text>
-            <View style={{width:"75%", height:"75%", alignSelf: "center"}}>
-                <ImageBackground source={{ uri: "https://www.infoescola.com/wp-content/uploads/2018/03/sagui-de-tufos-brancos_790108426-1000x667.jpg" }} style={styled.cardBackground} imageStyle={styled.imageStyle} />
+      {/* Cartão Principal */}
+      <View style={styled.suporteCartao}>
+        <View style={styled.containerPrincipal}>
+          
+          {/* Bloco Superior */}
+          <View style={styled.blocoSuperior}>
+            <Image
+              source={{
+                uri: "https://www.infoescola.com/wp-content/uploads/2018/03/sagui-de-tufos-brancos_790108426-1000x667.jpg",
+              }}
+              style={styled.imagemAnimal}
+            />
+
+            <View style={styled.divisorVertical} />
+
+            <View style={styled.containerInformacoes}>
+              <Text style={styled.nomeAnimal}>SAGUI-DE-TUFOS-BRANCOS</Text>
+              <View style={styled.divisorHorizontal} />
+              <Text style={styled.nomeCientifico}>(Callithrix jacchus)</Text>
+              <Text style={styled.textoInformacao}>Peso médio:</Text>
+              <Text style={styled.textoInformacao}>Tamanho médio:</Text>
             </View>
-        </SafeAreaView>
-)};
+          </View>
+
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
