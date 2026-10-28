@@ -39,6 +39,11 @@ export default StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#000000",
     overflow: "hidden",
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.1, 
+    shadowRadius: 4, 
+    elevation: 3 
   },
 
   // --- Bloco Superior Interno ---
