@@ -59,7 +59,7 @@ export default StyleSheet.create({
         marginRight:20,
         marginBottom: 15,
         marginTop: 10,
-        color:"#fffff",
+        color:"white",
         alignSelf: "flex-end"
     },
     loadingOverlay: {

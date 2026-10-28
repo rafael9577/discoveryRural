@@ -11,7 +11,7 @@ export default ({ navigation }) => {
 
   return (
     <SafeAreaView style={styled.safeArea}>
-      {/* Cabeçalho */}
+
       <View style={styled.containerCabecalho}>
         <TouchableOpacity onPress={() => navigation?.goBack()}>
           <Ionicons name="arrow-back" size={28} color="#FFFFFF" />
@@ -19,13 +19,11 @@ export default ({ navigation }) => {
         <Text style={styled.tituloCabecalho}>Informações do animal</Text>
       </View>
 
-      {/* Cartão Principal com Rolagem ScrollView */}
       <ScrollView style={styled.suporteCartao} showsVerticalScrollIndicator={false}>
         <View style={styled.containerPrincipal}>
           
-          {/* Bloco Superior */}
           <View style={styled.blocoSuperior}>
-            {/* Imagem clicável */}
+
             <TouchableOpacity onPress={() => setModalVisivel(true)} activeOpacity={0.8}>
               <Image
                 source={{ uri: urlImagem }}
@@ -35,13 +33,11 @@ export default ({ navigation }) => {
 
             <View style={styled.divisorVertical} />
 
-            {/* Nomes animal */}
             <View style={styled.containerInformacoes}>
               <Text style={styled.nomeAnimal}>SAGUI-DE-TUFOS-BRANCOS</Text>
               <View style={styled.divisorHorizontal} />
               <Text style={styled.nomeCientifico}>(Callithrix jacchus)</Text>
             
-            {/* Peso animal */}
               <View style={styled.linhaInformacao}>
                 <Text style={styled.textoInformacao}>Peso médio:</Text>
                 <Text style={styled.valorInformacao}>300 g - 450 g</Text>
