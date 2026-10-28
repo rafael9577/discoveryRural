@@ -84,47 +84,21 @@ export default StyleSheet.create({
     color: "#000000",
     marginTop: 2,
   },
-  containerCampoLinha: {
-  flexDirection: "row",
-  alignItems: "center",
-  marginTop: 4,
-  },
-  inputLinha: {
-    color: "#333",
-    fontSize: 14,
-    flex: 1,
-    paddingVertical: 2,
-  },
-  blocoCampo: {
-    marginTop: 16,
-    width: "100%",
-  },
-  labelCampo: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 4,
-  },
-  inputTexto: {
-    backgroundColor: "#F2F2F2",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    fontSize: 14,
-    color: "#333",
-  },
-  inputDescricao: {
-    minHeight: 100,
-  },
   blocoDescricao: {
     padding: 15,
     borderTopWidth: 1,
     borderTopColor: "#A0A0A0",
   },
   tituloDescricao: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     color: "#000000",
+    marginBottom: 8,
+  },
+  tituloDescricao2: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#333333",
     marginBottom: 8,
   },
   textoDescricao: {
@@ -142,6 +116,70 @@ export default StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     color: "#333333",
+  },
+  linhaInformacao2: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  linhaInformacao3: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  textoInformacao2: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#000000",
+    marginTop: 2,
+  },
+  valorInformacao2: {
+    fontSize: 14,
+    color: "#333333",
+    },
+    containerAviso: {
+    backgroundColor: 'rgba(255, 140, 0, 0.15)', // Laranja com 15% de opacidade
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 140, 0, 0.4)', // Borda sutil para definir melhor o quadrado
+  },
+  cabecalhoAviso: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  iconeAviso: {
+    marginRight: 6,
+  },
+  tituloAviso: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#BF360C',
+  },
+  textoAviso: {
+    fontSize: 13,
+    color: '#BF360C',
+    marginTop: 2,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  botaoFecharModal: {
+    position: "absolute",
+    top: 40,
+    right: 20,
+    zIndex: 10,
+    padding: 10,
+  },
+  imagemModal: {
+    width: "90%",
+    height: "80%",
   },
 
 });
