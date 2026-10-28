@@ -26,7 +26,7 @@ export default StyleSheet.create({
 
   // --- Cartão Principal ---
   suporteCartao: {
-    width: "85%",
+    width: "90%",
     height: "75%",
     alignSelf: "center",
     marginTop: 20,
@@ -47,8 +47,8 @@ export default StyleSheet.create({
     padding: 15,
   },
   imagemAnimal: {
-    width: 90,
-    height: 90,
+    width: 100,
+    height: 100,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#A0A0A0",
@@ -84,4 +84,64 @@ export default StyleSheet.create({
     color: "#000000",
     marginTop: 2,
   },
+  containerCampoLinha: {
+  flexDirection: "row",
+  alignItems: "center",
+  marginTop: 4,
+  },
+  inputLinha: {
+    color: "#333",
+    fontSize: 14,
+    flex: 1,
+    paddingVertical: 2,
+  },
+  blocoCampo: {
+    marginTop: 16,
+    width: "100%",
+  },
+  labelCampo: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 4,
+  },
+  inputTexto: {
+    backgroundColor: "#F2F2F2",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 14,
+    color: "#333",
+  },
+  inputDescricao: {
+    minHeight: 100,
+  },
+  blocoDescricao: {
+    padding: 15,
+    borderTopWidth: 1,
+    borderTopColor: "#A0A0A0",
+  },
+  tituloDescricao: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#000000",
+    marginBottom: 8,
+  },
+  textoDescricao: {
+    fontSize: 14,
+    color: "#333333",
+    lineHeight: 20,
+  },
+  linhaInformacao: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginTop: 4,
+  },
+  valorInformacao: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#333333",
+  },
+
 });

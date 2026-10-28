@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -16,8 +16,8 @@ export default ({ navigation }) => {
         <Text style={styled.tituloCabecalho}>Informações do animal</Text>
       </View>
 
-      {/* Cartão Principal */}
-      <View style={styled.suporteCartao}>
+      {/* Cartão Principal com Rolagem (ScrollView) */}
+      <ScrollView style={styled.suporteCartao} showsVerticalScrollIndicator={false}>
         <View style={styled.containerPrincipal}>
           
           {/* Bloco Superior */}
@@ -35,13 +35,35 @@ export default ({ navigation }) => {
               <Text style={styled.nomeAnimal}>SAGUI-DE-TUFOS-BRANCOS</Text>
               <View style={styled.divisorHorizontal} />
               <Text style={styled.nomeCientifico}>(Callithrix jacchus)</Text>
-              <Text style={styled.textoInformacao}>Peso médio:</Text>
-              <Text style={styled.textoInformacao}>Tamanho médio:</Text>
+              {/* Linha do Peso Médio */}
+              <View style={styled.linhaInformacao}>
+                <Text style={styled.textoInformacao}>Peso médio:</Text>
+                <Text style={styled.valorInformacao}>300 g - 450 g</Text>
+              </View>
+              {/* Linha do Tamanho Médio */}
+              <View style={styled.linhaInformacao}>
+                <Text style={styled.textoInformacao}>Tamanho médio:</Text>
+                <Text style={styled.valorInformacao}>18 cm - 25 cm</Text>
+              </View>
             </View>
           </View>
 
+          {/* Bloco de Descrição */}
+          <View style={styled.blocoDescricao}>
+            <Text style={styled.tituloDescricao}>Descrição do animal</Text>
+            <Text style={styled.textoDescricao}>
+              O sagui-de-tufos-brancos é um primata de pequeno porte nativo do Nordeste do Brasil. Caracteriza-se pelos marcantes tufos brancos ao redor das orelhas e cauda anelada.
+            </Text>
+          </View>
+
         </View>
-      </View>
+        
+      </ScrollView>
+      {/* Logo Discovery Rural no fim da pagina */}
+        <Image
+          style={{ width: 128, height: 128, alignSelf: 'center', marginTop: 20, marginBottom: 20 }}
+          source={{ uri: "https://github.com/rafael9577/discoveryRural/blob/main/front-end/assets/logoDiscoveryRuralWhite.png?raw=true" }}
+        />
     </SafeAreaView>
   );
 };
