@@ -137,7 +137,7 @@ func registrarAnimais(adminKey string) {
 	})
 
 	http.HandleFunc("/api/animais/resumo", func(w http.ResponseWriter, r *http.Request) {
-		rows, err := db.Query("SELECT id, nome_popular FROM animais")
+		rows, err := db.Query("SELECT id, nome_popular, breve_descricao FROM animais")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -148,11 +148,13 @@ func registrarAnimais(adminKey string) {
 		for rows.Next() {
 			var id int
 			var nomePopular string
-			rows.Scan(&id, &nomePopular)
+			var breveDescricao sql.NullString
+			rows.Scan(&id, &nomePopular, &breveDescricao)
 			lista = append(lista, map[string]any{
-				"id":           id,
-				"nome_popular": nomePopular,
-				"imagem_url":   "/api/animal/imagem?id=" + strconv.Itoa(id),
+				"id":              id,
+				"nome_popular":    nomePopular,
+				"breve_descricao": breveDescricao.String,
+				"imagem_url":      "/api/animal/imagem?id=" + strconv.Itoa(id),
 			})
 		}
 		w.Header().Set("Content-Type", "application/json")
