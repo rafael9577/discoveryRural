@@ -15,6 +15,7 @@ func main() {
 
 	registrarAnimais(adminKey)
 	registrarUsuarios(adminKey)
+	registrarRelatos()
 
 	port := os.Getenv("PORT")
 	if port == "" {
