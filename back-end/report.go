@@ -23,14 +23,14 @@ type novoRelato struct {
 	LocalNome string   `json:"local_nome"`
 }
 
-type limitador struct {
+type limitadorRelato struct {
 	mu      sync.Mutex
 	ultimos map[string]time.Time
 	janela  time.Duration
 }
 
-func novoLimitador(janela time.Duration) *limitador {
-	l := &limitador{ultimos: make(map[string]time.Time), janela: janela}
+func novoLimitadorRelato(janela time.Duration) *limitadorRelato {
+	l := &limitadorRelato{ultimos: make(map[string]time.Time), janela: janela}
 	go func() {
 		for range time.Tick(10 * time.Minute) {
 			l.mu.Lock()
@@ -46,7 +46,7 @@ func novoLimitador(janela time.Duration) *limitador {
 	return l
 }
 
-func (l *limitador) permitir(chave string) bool {
+func (l *limitadorRelato) permitir(chave string) bool {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	agora := time.Now()
@@ -117,7 +117,7 @@ func registrarRelatos() {
 		log.Fatal(err)
 	}
 
-	lim := novoLimitador(10 * time.Second)
+	lim := novoLimitadorRelato(10 * time.Second)
 
 	http.HandleFunc("/api/relato", comCORS(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

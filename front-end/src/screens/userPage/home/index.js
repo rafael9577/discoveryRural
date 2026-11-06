@@ -14,6 +14,10 @@ export default () => {
     navigation.navigate("infoImportantes");
   };
 
+    const tocard2 = () => {
+    navigation.navigate("telaMapa");
+  };
+
   return (
     <SafeAreaView style={styled.safeArea}>
       {/* Card Principal */}
@@ -33,6 +37,13 @@ export default () => {
       <TouchableOpacity style={styled.cardContainer2} onPress={tocard1} activeOpacity={0.8}>
         <View style={styled.overlay2}>
           <Text style={styled.cardText}>{"Guia de Emergência"}</Text>
+        </View>
+      </TouchableOpacity>
+
+      {/* Terceiro Card */}
+      <TouchableOpacity style={styled.cardContainer2} onPress={tocard2} activeOpacity={0.8}>
+        <View style={styled.overlay2}>
+          <Text style={styled.cardText}>{"Mapa da Rural"}</Text>
         </View>
       </TouchableOpacity>
     </SafeAreaView>
