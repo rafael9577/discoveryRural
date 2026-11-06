@@ -5,6 +5,8 @@ import sair from '../screens/userPage/sair';
 
 import home from "../screens/userPage/home";
 import busca from "../screens/userPage/informacao";
+import emergencia from '../screens/userPage/emergencia';
+import mapa from '../screens/userPage/mapa';
 
 const tabs = createBottomTabNavigator();
 
@@ -30,7 +32,11 @@ export default () => {
                         iconName = 'search';
                     } else if (route.name === 'sair') {
                         iconName = 'log-out';
-                    }
+                    } else if (route.name === 'emergencia') {
+                        iconName = 'help-circle';
+                    }else if (route.name === 'mapa') {
+                        iconName = 'map';
+                    } 
                     return <Feather name={iconName} size={size} color={color} />;
                 },
                 tabBarActiveTintColor: '#2E7D32',
@@ -39,6 +45,8 @@ export default () => {
         >
             <tabs.Screen name='home' component={home}/>
             <tabs.Screen name='busca' component={busca}/>
+            <tabs.Screen name='mapa' component={mapa}/>
+            <tabs.Screen name='emergencia' component={emergencia} />
             
             <tabs.Screen 
                 name='sair' 
@@ -46,7 +54,6 @@ export default () => {
                 listeners={{
                     tabPress: async (e) => {
                         e.preventDefault(); 
-                        
                         try {
                             await sair();     
                         } catch (error) {

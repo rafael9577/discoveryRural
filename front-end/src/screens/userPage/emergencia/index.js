@@ -3,7 +3,7 @@ import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Linking } from 
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styled';
 
-export default function InfoImportantes() {
+export default () => {
   const navigation = useNavigation();
 
   const handleCall = (numero) => {

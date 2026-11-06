@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, Image, ActivityIndicator, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Image, ActivityIndicator, FlatList, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
@@ -74,7 +74,6 @@ export default () => {
         />
       </View>
 
-      {/* Conteúdo Dinâmico */}
       {loading ? (
         <View style={style.centerContainer}>
           <ActivityIndicator size="large" color="#007AFF" />
@@ -102,6 +101,11 @@ export default () => {
           />
         </View>
       )}
+      <Modal 
+            transparent={true}
+            animationType='none'
+            visible={loading}
+      />
     </SafeAreaView>
   );
 };

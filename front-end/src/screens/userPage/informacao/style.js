@@ -51,15 +51,22 @@ export default StyleSheet.create({
         color: "#FFFFFF",
     },
     cardDescription: {
+        fontSize: 12,
         marginLeft: 10,
         marginTop: 4,
         color: "#FFFFFF",
     },
 
     centerContainer: {
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 30,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0, 0.5)',
+        zIndex: 1,
     },
     loadingText: {
         color: "#FFFFFF",

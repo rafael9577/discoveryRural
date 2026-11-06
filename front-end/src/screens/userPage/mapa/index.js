@@ -6,7 +6,7 @@ import {
   Switch, 
   //SafeAreaView 
 } from 'react-native';
-// Importação da biblioteca de mapas (marcador de ponto, serve para o mapa de calor e puxa o Google mpas)
+
 import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -20,7 +20,7 @@ const ANIMAIS_MOCK = [
   { id: '2', nome: 'Bicho-Preguiça-comum', latitude: -8.0150, longitude: -34.9490 },
 ];
 
-export default function TelaMapa() {
+export default () => {
   const navigation = useNavigation();
   
   // controle da interface
