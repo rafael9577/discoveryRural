@@ -20,7 +20,8 @@ export const styles = StyleSheet.create({
     marginRight: 10 
   },
   headerTextContainer: { 
-    flex: 1 
+    alignItems: 'center',
+    flex: 1,
   },
   title: { fontSize: 24
     , fontWeight: 'bold'

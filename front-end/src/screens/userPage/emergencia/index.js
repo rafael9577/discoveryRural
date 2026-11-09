@@ -15,9 +15,6 @@ export default () => {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Text style={styles.title}>←</Text>
-          </TouchableOpacity>
           <View style={styles.headerTextContainer}>
             <Text style={styles.title}>Guia de Emergência</Text>
             <Text style={styles.subtitle}>Suporte para Recife e Região Metropolitana</Text>

@@ -22,16 +22,17 @@ export const styles = StyleSheet.create({
     padding: 8,
   },
   headerTitleBox: {
-    borderWidth: 1,
-    borderColor: '#000',
-    paddingVertical: 8,
-    paddingHorizontal: 32,
-    backgroundColor: '#FFF',
+    backgroundColor: '#FFF',flex:1
   },
   headerTitleText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000',
+    borderWidth: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 32,
+    borderColor: '#000',
+    alignSelf: 'center'
   },
   menuButton: {
     padding: 8,
@@ -127,4 +128,14 @@ export const styles = StyleSheet.create({
     backgroundColor: '#999',
     marginHorizontal: 16,
   },
+  avistamento: {
+    borderWidth:1,
+    borderColor: 'black',
+    width: "80%",
+    alignSelf:'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+    borderRadius:12,
+    backgroundColor: 'pink'
+  }
 });

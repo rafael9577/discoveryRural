@@ -33,7 +33,6 @@ export default () => {
                         text1: 'Email ou senha invalido'
                     })
                 } else {
-                    console.log(reqLogin)
                     Navigator.replace("tabsRouts");
                 }
             } catch (error) {

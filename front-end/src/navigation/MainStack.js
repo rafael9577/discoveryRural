@@ -4,6 +4,7 @@ import login from '../screens/login'
 import signUp from '../screens/signup'
 import tabsRouts from './TabsNavigator'
 import animalDetalhe from "../screens/userPage/detalheAnimal"
+import avistamento from '../screens/userPage/avistamento'
 
 const stack = createNativeStackNavigator();
 
@@ -13,5 +14,6 @@ export default () => (
         <stack.Screen name='signup' component={signUp} />
         <stack.Screen name='tabsRouts' component={tabsRouts}/>
         <stack.Screen name='animalDetalhe' component={animalDetalhe} />
+        <stack.Screen name='avistamento' component={avistamento} />
     </stack.Navigator>
 )

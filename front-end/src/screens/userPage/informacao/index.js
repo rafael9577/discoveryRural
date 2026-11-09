@@ -20,7 +20,6 @@ export default () => {
       setError(null);
       const dados = await listarAnimais();
       setAnimais(dados);
-      console.log(dados)
     } catch (err) {
       console.error("Erro ao carregar os animais:", err);
       setError("Não foi possível carregar os animais.");

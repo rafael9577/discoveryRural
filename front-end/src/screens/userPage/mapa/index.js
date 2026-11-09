@@ -4,7 +4,6 @@ import {
   Text, 
   TouchableOpacity, 
   Switch, 
-  //SafeAreaView 
 } from 'react-native';
 
 import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -20,9 +19,15 @@ const ANIMAIS_MOCK = [
   { id: '2', nome: 'Bicho-Preguiça-comum', latitude: -8.0150, longitude: -34.9490 },
 ];
 
+
+
 export default () => {
   const navigation = useNavigation();
   
+  const avistamento = () => {
+    navigation.navigate("avistamento");
+  }
+
   // controle da interface
   const [menuAberto, setMenuAberto] = useState(false); // controla se o menu lateral está visível ou não
   const [mapaDeCalorAtivo, setMapaDeCalorAtivo] = useState(false); // alterna entre os marcadores e o heatmap
@@ -75,11 +80,6 @@ export default () => {
       
       {/* HEADER/CABEÇALHO */}
       <View style={styles.header}>
-        
-        {/* botão de Voltar */}
-        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.goBack()}>
-          <Feather name="arrow-left" size={28} color="#000" />
-        </TouchableOpacity>
 
         {/* nome central da tela */}
         <View style={styles.headerTitleBox}>
@@ -165,29 +165,14 @@ export default () => {
               
               {renderCheckboxItem('Bicho-Preguiça-comum')}
               <View style={styles.separator} />
-              
-              {/* itens desabilitados (placeholders para simular futuras opções visuais) */}
-              <TouchableOpacity style={styles.checkboxItemContainer} disabled>
-                <Text style={styles.checkboxItemText}></Text>
-                <View style={styles.checkboxBox} />
-              </TouchableOpacity>
-              <View style={styles.separator} />
-              
-              <TouchableOpacity style={styles.checkboxItemContainer} disabled>
-                <Text style={styles.checkboxItemText}></Text>
-                <View style={styles.checkboxBox} />
-              </TouchableOpacity>
-              <View style={styles.separator} />
-              
-               <TouchableOpacity style={styles.checkboxItemContainer} disabled>
-                <Text style={styles.checkboxItemText}></Text>
-                <View style={styles.checkboxBox} />
-              </TouchableOpacity>
             </View>
             
           </View>
         )}
       </View>
+      <TouchableOpacity style={styles.avistamento} onPress={avistamento} >
+        <Text>adiconar avistamento</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

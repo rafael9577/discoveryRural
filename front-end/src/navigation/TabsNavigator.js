@@ -17,14 +17,12 @@ export default () => {
 
     return (
         <tabs.Navigator 
-            initialRouteName='home' 
+            initialRouteName='mapa' 
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarIcon: ({ color, size }) => {
                     let iconName;
-                    if (route.name === 'home') {
-                        iconName = 'home';
-                    } else if (route.name === 'profile') {
+                    if (route.name === 'profile') {
                         iconName = 'user';
                     } else if (route.name === 'settings') {
                         iconName = 'settings';
@@ -32,8 +30,8 @@ export default () => {
                         iconName = 'search';
                     } else if (route.name === 'sair') {
                         iconName = 'log-out';
-                    } else if (route.name === 'emergencia') {
-                        iconName = 'help-circle';
+                    } else if (route.name === 'prevenção') {
+                        iconName = 'alert-octagon';
                     }else if (route.name === 'mapa') {
                         iconName = 'map';
                     } 
@@ -43,10 +41,9 @@ export default () => {
                 tabBarInactiveTintColor: 'gray' 
             })}
         >
-            <tabs.Screen name='home' component={home}/>
-            <tabs.Screen name='busca' component={busca}/>
+            <tabs.Screen name='prevenção' component={emergencia} />
             <tabs.Screen name='mapa' component={mapa}/>
-            <tabs.Screen name='emergencia' component={emergencia} />
+            <tabs.Screen name='busca' component={busca}/>
             
             <tabs.Screen 
                 name='sair' 
