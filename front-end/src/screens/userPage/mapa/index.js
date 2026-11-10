@@ -19,8 +19,6 @@ const ANIMAIS_MOCK = [
   { id: '2', nome: 'Bicho-Preguiça-comum', latitude: -8.0150, longitude: -34.9490 },
 ];
 
-
-
 export default () => {
   const navigation = useNavigation();
   

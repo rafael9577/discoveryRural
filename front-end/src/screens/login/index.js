@@ -11,8 +11,8 @@ import * as Api from "../../../services/API"
 export default () => {
 
     const [imagePassowrd, setImagePassowrd] = useState("eye-off");
-    const [passowrdFild, setPassowrdFild] = useState("Souza500");
-    const [emailFild, setEmailFild] = useState("nivanirfrancisco@gmail.com");
+    const [passowrdFild, setPassowrdFild] = useState("");
+    const [emailFild, setEmailFild] = useState("");
     const [seePassowrd, setSeePassowrd] = useState(true);
     const [loading, setLoading] = useState(false);
 

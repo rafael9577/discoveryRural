@@ -178,6 +178,7 @@ func registrarRelatos() {
 		}
 
 		res, err := db.Exec(
+			//local_nome está recebendo a descrição 
 			"INSERT INTO relatos (animal_id, latitude, longitude, precisao, local_nome) VALUES (?, ?, ?, ?, ?)",
 			in.AnimalID, lat, lon, precisao, localNome,
 		)
