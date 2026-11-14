@@ -1,9 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const { width } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#0A5133', 
   },
   
   /* HEADER STYLES */
@@ -13,47 +15,45 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-    zIndex: 2, // Garante que o header fique acima do mapa
+    backgroundColor: 'transparent',
+    zIndex: 2, 
   },
-  iconButton: {
-    padding: 8,
+  headerSpacer: {
+    width: 40, 
   },
   headerTitleBox: {
-    backgroundColor: '#FFF',flex:1
+    flex: 1,
+    alignItems: 'center',
   },
   headerTitleText: {
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#000',
-    borderWidth: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 32,
-    borderColor: '#000',
-    alignSelf: 'center'
+    color: '#FFFFFF', 
   },
   menuButton: {
-    padding: 8,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 4,
-    backgroundColor: '#FFF',
+    borderColor: '#1B5E20',
+    borderRadius: 12,
+    backgroundColor: '#2E7D32', 
   },
   menuButtonAtivo: {
-    backgroundColor: '#228B22', 
-    borderColor: '#228B22',
+    backgroundColor: '#1B5E20', 
   },
 
-  /* MAP STYLES */
+  /* MAPA estilos */
   mapContainer: {
     flex: 1,
-    margin: 16,
-    borderRadius: 16,
+    width: "95%",
+    alignSelf: "center",
+    marginVertical: 10,
+    borderRadius: 20, 
     overflow: 'hidden', 
-    borderWidth: 1,
-    borderColor: '#000',
+    borderWidth: 2,
+    borderColor: '#1B5E20',
   },
   map: {
     width: '100%',
@@ -63,11 +63,14 @@ export const styles = StyleSheet.create({
   /* OVERLAY MENU STYLES */
   overlayMenu: {
     position: 'absolute',
-    top: 0,
-    right: 0,
+    top: 10,
+    right: 10,
     width: '75%', 
-    backgroundColor: '#FFF',
-    borderBottomLeftRadius: 8,
+    backgroundColor: '#2E7D32', 
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#1B5E20',
+    overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -78,29 +81,27 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#228B22', 
+    backgroundColor: '#1B5E20', 
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   overlayHeaderText: {
-    color: '#FFF',
+    color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 14,
   },
   overlayBody: {
-    backgroundColor: '#EAEAEA', 
+    backgroundColor: '#2E7D32', 
   },
   filterTitleContainer: {
-    backgroundColor: '#D3D3D3',
+    backgroundColor: 'rgba(0,0,0,0.2)',
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#B0B0B0',
   },
   filterTitleText: {
     fontWeight: 'bold',
     fontSize: 12,
-    color: '#000',
+    color: '#E0E0E0',
   },
   checkboxItemContainer: {
     flexDirection: 'row',
@@ -111,31 +112,38 @@ export const styles = StyleSheet.create({
   },
   checkboxItemText: {
     fontSize: 14,
-    color: '#000',
+    color: '#FFFFFF',
     fontWeight: '500',
   },
   checkboxBox: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-    borderColor: '#000',
-    backgroundColor: '#FFF',
+    width: 24,
+    height: 24,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    borderRadius: 6,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },
   separator: {
     height: 1,
-    backgroundColor: '#999',
+    backgroundColor: '#1B5E20',
     marginHorizontal: 16,
   },
+  
+  /* EStilo do botão */
   avistamento: {
-    borderWidth:1,
-    borderColor: 'black',
-    width: "80%",
-    alignSelf:'center',
+    backgroundColor: "#268596", 
+    width: "95%",
+    alignSelf: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
-    borderRadius:12,
-    backgroundColor: 'pink'
+    paddingVertical: 15,
+    borderRadius: 20,
+    marginBottom: 20,
+  },
+  avistamentoText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 16,
   }
 });

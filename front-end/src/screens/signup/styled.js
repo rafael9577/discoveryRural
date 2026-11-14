@@ -2,71 +2,67 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
     safeArea: {
-	    backgroundColor: "#0A5133",
-        flex:1,
+        backgroundColor: "#0A5133",
+        flex: 1,
         justifyContent: 'center',
-	    alignItems: "center"
+        alignItems: "center"
     },
     inputArea: {
-	    flex:1,
-	    justifyContent: 'center',
-	    alignItems: "center",
-	    width: '100%',
-	    padding: 40,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: "center",
+        width: '100%',
+        paddingHorizontal: 30,
     },
     singInPut: {
         width: '100%',
-        height: 55,
-        backgroundColor: '#A7F3D0',
+        height: 60,
+        backgroundColor: '#A7F3D0', 
         flexDirection: 'row',
-        borderRadius: 30,
+        borderRadius: 20, 
         paddingLeft: 15,
         alignItems: 'center',
         marginTop: 15,
+        borderWidth: 2, 
+        borderColor: '#1B5E20',
+    },
+    textInput: {
+        flex: 1,
+        fontSize: 16,
+        marginLeft: 5,
+        color: '#0A5133',
     },
     custtomButton: {
-        width: '75%',
+        width: '100%', 
         height: 60,
-        backgroundColor: '#268596',
-        borderRadius: 30,
+        backgroundColor: '#268596', 
+        borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: 'black',
-        borderWidth: 0.6,
+        borderColor: '#1B5E20',
+        borderWidth: 2, 
+        marginTop: 30, 
         marginBottom: 20,
     },
     customButtontext: {
         fontSize: 18,
-        color: '#ffffff',
-    },
-     customButtontext2: {
-        fontSize: 18,
-        color: '#00A8FF',
-        marginVertical: 20
+        color: '#FFFFFF',
+        fontWeight: 'bold',
     },
     singMessageButto: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginVertical: 20,
+        marginVertical: 25,
+    },
+    singMessageButtonText: {
+        fontSize: 15,
+        color: '#E0E0E0', 
     },
     singMessageButtonTextBold: {
-        fontSize: 16,
-        color: '#00A8FF',
+        fontSize: 15,
         fontWeight: 'bold',
         marginLeft: 5,
-    },
-    textInput: {
-        flex: 1,
-        color: "#010e14",
-        fontSize: 16,
-        marginLeft: 10,
-        borderColor: 'white'
-    },
-    forgotPassowrd: {
-        marginRight:20,
-        marginBottom: 15,
-        marginTop: 10,
-        alignSelf: "flex-end"
+        color: "#A7F3D0",
     },
     loadingOverlay: {
         position: 'absolute',
@@ -76,17 +72,7 @@ export default StyleSheet.create({
         bottom: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0, 0.5)',
+        backgroundColor: 'rgba(0,0,0, 0.7)',
         zIndex: 1,
     },
-    ToastShow: {
-    type: 'error',
-    text1: '',
-    text2: '',
-    position: 'bottom',
-    visibilityTime: 3000,
-    },
-    
-})
-
-
+});
