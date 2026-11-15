@@ -1,127 +1,61 @@
-# Documentação da API – Discovery Rural
+# Discovery Rural – Guia da API para o Front-end
 
-*Servidor em Go com banco de dados SQLite hospedado no Turso*
+Este documento explica como o app (Expo / React Native) conversa com o servidor. Ele cobre os animais, os avistamentos (para o mapa de calor) e os usuários.
 
-## 1. Visão geral
+## 1. Conceitos básicos
 
-A API do Fauna Local é um servidor em Go que cadastra e consulta espécies da fauna. Os dados ficam em um banco SQLite hospedado no Turso (libSQL), acessado pela internet. Em desenvolvimento, o servidor responde em `http://localhost:8080`.
+| Item | Valor |
+| --- | --- |
+| Endereço base | Variável `EXPO_PUBLIC_API_URL` (ex.: `https://SEU-SERVICO.onrender.com`). Em testes locais, `http://IP-DO-COMPUTADOR:8080`. Nunca use `localhost` no celular. |
+| Formato | JSON (as imagens são JPEG). |
+| Imagens | A API devolve só o caminho (`/api/animal/imagem?id=1`). O app precisa juntar o endereço base: `API_URL + imagem_url`. |
+| Coordenadas | Sempre `long` (longitude) e `lat` (latitude), em graus. |
+| Textos sem valor | Chegam como `""` (texto vazio), nunca como `null`. |
+| Autenticação | Só as rotas de usuário logado usam o cabeçalho `Authorization: Bearer <token>`. Animais e avistamentos são públicos. |
+| Rotas de administrador | Cadastrar e atualizar animal exigem a chave de administrador (`X-Admin-Key`). **Não use no app.** |
+| Primeira chamada lenta | O servidor gratuito do Render dorme após ~15 min sem uso. A primeira chamada pode levar cerca de 1 minuto. Use um indicador de carregamento. |
 
-Além dos endpoints da API, a rota `/` serve uma página web simples de teste, com a listagem de espécies e um formulário de cadastro.
+## 2. Formato de erro
 
-### Situação dos endpoints
+- **Rotas de usuário, avistamento e animais padronizados:** JSON, com o campo `erro`.
+  ```json
+  { "erro": "Animal não encontrado" }
+  ```
+- **Rotas antigas de animal** (`/api/animal`, `/api/animais/resumo`, `/api/animal/imagem`, `/api/animal/create`) e de relato (`/api/relato`, `/api/relatos`): o erro vem em **texto simples**. No `api.js`, a função `chamar` já trata os dois casos.
 
-| Nº | Endpoint | Situação |
+| Status | Significado |
+| --- | --- |
+| 200 / 201 | Deu certo (201 = criado) |
+| 400 | Dado inválido ou faltando |
+| 401 | Sem login, token inválido ou chave de administrador errada |
+| 404 | Animal ou avistamento não encontrado |
+| 405 | Método HTTP não permitido nessa rota |
+| 429 | Muitas tentativas seguidas; espere alguns segundos |
+| 500 | Erro no servidor |
+
+## 3. Objeto Animal (formato padrão)
+
+É o formato da lista completa (`GET /api/animais`) e do detalhe (`GET /api/animal?id=N`).
+
+| Campo | Tipo | Descrição |
 | --- | --- | --- |
-| 1 | `GET /api/animais/resumo` | Disponível |
-| 2 | `GET /api/animal` | Disponível |
-| 3 | `GET /api/animal/imagem` | Disponível |
-| 4 | `GET /api/identificar` | **Em desenvolvimento** |
-| 5 | `POST /api/animal/create` | Disponível (validação em desenvolvimento) |
+| `id` | número | Identificador do animal |
+| `nome_popular` | texto | Nome popular |
+| `nome_cientifico` | texto | Nome científico |
+| `breve_descricao` | texto | Descrição resumida |
+| `estado_conservacao` | texto | Ex.: "Pouco preocupante" |
+| `habito` | texto | Ex.: "Diurno", "Noturno" |
+| `vocalizacao_postura` | texto | Som e postura |
+| `peconhento` | booleano | `true` se for peçonhento |
+| `aviso_seguranca` | texto | Orientação de segurança |
+| `protocolo_incidente` | texto | O que fazer em caso de incidente |
+| `contatos_resgate` | texto | Contatos para resgate |
+| `raridade` | número | De 1 a 5 |
+| `bitmap_id` | número | Soma de bits das características (usada na identificação) |
+| `imagem_url` | texto | Caminho da foto (juntar com o endereço base) |
+| `avistamentos` | lista | Lista de `{ "long": número, "lat": número }`; vazia se não houver |
 
-## 2. Configuração
-
-O servidor lê duas variáveis de ambiente e não inicia se alguma delas estiver ausente.
-
-| Variável | Descrição |
-| --- | --- |
-| `TURSO_DATABASE_URL` | URL do banco no Turso (começa com `libsql://`). |
-| `TURSO_AUTH_TOKEN` | Token de acesso ao banco. |
-
-> **Atenção:** o token é uma senha de acesso ao banco. Nunca o coloque no código nem envie-o ao repositório. Mantenha-o em variáveis de ambiente ou em um arquivo `.env` listado no `.gitignore`.
-
-## 3. Como executar
-
-1. Instalar o Go e o Git.
-2. Na pasta do back-end, baixar as dependências com `go mod tidy` (se a pasta ainda não tiver `go.mod`, criar antes com `go mod init <nome-do-modulo>`).
-3. Definir as variáveis de ambiente, conforme o terminal:
-
-   PowerShell (Windows):
-
-   ```powershell
-   $env:TURSO_DATABASE_URL = "libsql://..."
-   $env:TURSO_AUTH_TOKEN = "seu-token"
-   ```
-
-   Bash (Linux, macOS, WSL):
-
-   ```bash
-   export TURSO_DATABASE_URL="libsql://..."
-   export TURSO_AUTH_TOKEN="seu-token"
-   ```
-
-4. Executar o servidor com `go run .`
-5. Acessar `http://localhost:8080`. Para encerrar o servidor, usar `Ctrl + C` no terminal.
-
-## 4. Banco de dados
-
-O banco `fauna` possui duas tabelas.
-
-### Tabela `animais` (em uso)
-
-| Coluna | Tipo | Descrição |
-| --- | --- | --- |
-| `id` | INTEGER, PK | Identificador automático. |
-| `nome_popular` | TEXT, obrigatório | Nome popular da espécie. |
-| `nome_cientifico` | TEXT | Nome científico. |
-| `imagem` | BLOB | Foto em JPEG, corte 3:4 (ver endpoint 5). |
-| `breve_descricao` | TEXT | Descrição resumida da espécie. |
-| `estado_conservacao` | TEXT | Estado de conservação (ex.: Pouco preocupante). |
-| `habito` | TEXT | Hábito (ex.: Diurno, Noturno). |
-| `vocalizacao_postura` | TEXT | Vocalização e postura características. |
-| `peconhento` | INTEGER, obrigatório | 1 se for peçonhento/venenoso; 0 se não for. |
-| `aviso_seguranca` | TEXT | Orientações de segurança. |
-| `protocolo_incidente` | TEXT | O que fazer em caso de incidente. |
-| `contatos_resgate` | TEXT | Contatos para resgate. |
-| `raridade` | INTEGER | Valor de 1 a 5 (restrição no banco). |
-| `bitmap_id` | INTEGER, padrão 0 | Soma dos bits das características (ver seção 6). |
-
-### Tabela `relatos` (reservada para uso futuro)
-
-A tabela `relatos` (avistamentos com `animal_id`, `latitude`, `longitude`, `precisao`, `local_nome` e `data_hora`) existe no banco, mas está **reservada para uso futuro**: nenhum endpoint a utiliza por enquanto.
-
-## 5. Endpoints
-
-### 1. Listar Resumo dos Animais (Com Imagem)
-
-Retorna uma lista contendo o ID, o nome popular e a URL da imagem de todas as espécies cadastradas (ideal para a listagem inicial e cards). Quando não há espécies cadastradas, a resposta é uma lista vazia (`[]`).
-
-| | |
-| --- | --- |
-| **URL** | `/api/animais/resumo` |
-| **Método** | `GET` |
-| **Resposta** | `200 OK` (JSON) |
-
-**Exemplo de resposta (200 OK):**
-
-```json
-[
-  {
-    "id": 1,
-    "nome_popular": "Coruja-buraqueira",
-    "imagem_url": "/api/animal/imagem?id=1"
-  },
-  {
-    "id": 2,
-    "nome_popular": "Cágado-de-barbicha",
-    "imagem_url": "/api/animal/imagem?id=2"
-  }
-]
-```
-
-### 2. Obter Detalhes Completos de um Animal
-
-Retorna todas as informações detalhadas, comportamentais, de segurança, raridade e bitmap de uma espécie específica. Campos de texto sem valor no banco são devolvidos como string vazia (`""`), e `peconhento` é devolvido como booleano.
-
-| | |
-| --- | --- |
-| **URL** | `/api/animal` |
-| **Método** | `GET` |
-| **Parâmetro (query)** | `id` (inteiro, obrigatório): ID do animal desejado. |
-| **Resposta** | `200 OK` (JSON) |
-
-**Exemplo de requisição:** `GET /api/animal?id=1`
-
-**Exemplo de resposta (200 OK):**
+Exemplo:
 
 ```json
 {
@@ -138,103 +72,186 @@ Retorna todas as informações detalhadas, comportamentais, de segurança, rarid
   "contatos_resgate": "193 / Setor Ambiental",
   "raridade": 2,
   "bitmap_id": 18,
-  "imagem_url": "/api/animal/imagem?id=1"
+  "imagem_url": "/api/animal/imagem?id=1",
+  "avistamentos": [
+    { "long": -34.9486, "lat": -8.0178 },
+    { "long": -34.9503, "lat": -8.0152 }
+  ]
 }
 ```
 
-### 3. Exibir Imagem do Animal
+## 4. Animais
 
-Endpoint binário que busca a imagem otimizada (corte 3:4, em torno de 16 KB) salva diretamente no banco de dados (BLOB).
+### 4.1 Ids dos animais
 
-| | |
-| --- | --- |
-| **URL** | `/api/animal/imagem` |
-| **Método** | `GET` |
-| **Parâmetro (query)** | `id` (inteiro): ID do animal. |
-| **Header de resposta** | `Content-Type: image/jpeg` |
+`GET /api/animais/ids` → `200`
 
-**Uso no front-end:**
-
-```html
-<img src="/api/animal/imagem?id=1" alt="Animal" />
+```json
+[1, 2, 3]
 ```
 
-### 4. Filtrar por Identificação (Bitmap ID)
+### 4.2 Lista resumida (cards)
 
-> **EM DESENVOLVIMENTO.** Este endpoint ainda não está implementado no servidor. A descrição abaixo é a funcionalidade planejada e pode mudar até a implementação.
+`GET /api/animais/resumo` → `200`
 
-Endpoint a ser utilizado no fluxo de perguntas do aplicativo para filtrar as espécies compatíveis com as características selecionadas pelo usuário.
+```json
+[
+  { "id": 1, "nome_popular": "Coruja-buraqueira", "breve_descricao": "Pequena coruja de hábitos terrestres.", "imagem_url": "/api/animal/imagem?id=1" }
+]
+```
 
-| | |
-| --- | --- |
-| **URL** | `/api/identificar` |
-| **Método** | `GET` |
-| **Parâmetro (query)** | `mask` (inteiro): valor da máscara resultante da soma dos bits correspondentes às respostas dadas pelo usuário (ver seção 6). |
-| **Resposta prevista** | Array com os animais que casam com o filtro bit a bit: `(bitmap_id & mask) = mask`. |
+### 4.3 Lista completa (objeto padrão, com avistamentos)
 
-**Exemplo de requisição:** `GET /api/identificar?mask=10`
+`GET /api/animais` → `200`: lista de objetos Animal (seção 3).
 
-### 5. Cadastrar Nova Espécie
+### 4.4 Detalhe de um animal
 
-Permite o cadastro de uma nova espécie enviando os dados via formulário multipart. A imagem enviada é processada e cortada automaticamente pelo back-end.
+`GET /api/animal?id=N` → `200`: um objeto Animal (seção 3). `400` se faltar o `id` e `404` se não existir.
 
-| | |
-| --- | --- |
-| **URL** | `/api/animal/create` |
-| **Método** | `POST` |
-| **Content-Type** | `multipart/form-data` |
-| **Resposta de sucesso** | Redireciona para `/` (`303 See Other`), sem corpo JSON e sem devolver o ID do animal criado. |
+### 4.5 Foto do animal
 
-> **VALIDAÇÃO EM DESENVOLVIMENTO.** Hoje o servidor não valida os campos enviados. A obrigatoriedade indicada abaixo é aplicada apenas pelo formulário HTML da rota `/`; a validação no back-end ainda será implementada.
+`GET /api/animal/imagem?id=N` → `200`, `Content-Type: image/jpeg`. No app:
 
-#### Campos do formulário (Form Data)
+```jsx
+<Image source={{ uri: API_URL + animal.imagem_url }} style={{ width: 120, height: 160 }} />
+```
 
-| Campo | Tipo | Observação |
+### 4.6 Cadastrar e atualizar (administrador)
+
+Não fazem parte do app. Existem para a equipe e para a página de teste do servidor (`/`).
+
+- `POST /api/animal/create`: formulário (`multipart/form-data`) com a chave de administrador.
+- `PATCH /api/animal/update?id=N`: corpo JSON com **apenas os campos que mudam**, cabeçalho `X-Admin-Key`. Valida: `nome_popular` não pode ficar vazio, `raridade` de 1 a 5, `bitmap_id` maior ou igual a 0 e limites de tamanho dos textos. Devolve o animal atualizado (objeto padrão).
+
+```json
+{ "estado_conservacao": "Quase ameaçada", "raridade": 3 }
+```
+
+## 5. Avistamentos
+
+### 5.1 Lista de avistamentos por animal (mapa de calor)
+
+`GET /api/avistamentos` → `200`
+
+```json
+[
+  { "animal_id": 1, "avistamentos": [ { "long": -34.9486, "lat": -8.0178 }, { "long": -34.9503, "lat": -8.0152 } ] },
+  { "animal_id": 2, "avistamentos": [] }
+]
+```
+
+- Todo animal aparece, mesmo sem avistamentos (lista vazia).
+- Filtro: `GET /api/avistamentos?animal_id=N` (`400` se o id não for número, `404` se o animal não existir).
+- Devolve no máximo 5.000 pontos por chamada.
+
+Para o mapa de calor do `react-native-maps` (`Heatmap`), converta cada ponto:
+
+```js
+const pontos = grupos.flatMap(g => g.avistamentos)
+  .map(p => ({ latitude: p.lat, longitude: p.long, weight: 1 }));
+```
+
+### 5.2 Buscar um avistamento
+
+`GET /api/avistamento?id=N` → `200`
+
+```json
+{
+  "id": 7,
+  "animal_id": 1,
+  "latitude": -8.0178,
+  "longitude": -34.9486,
+  "precisao": 10,
+  "local_nome": "Perto da Reitoria",
+  "data_hora": "2026-11-09T03:24:06Z"
+}
+```
+
+`precisao` pode ser `null`. `400` se faltar o `id` e `404` se não existir.
+
+### 5.3 Registrar um avistamento
+
+`POST /api/avistamento` com `Content-Type: application/json` → `201`
+
+```json
+{ "animal_id": 1, "latitude": -8.0178, "longitude": -34.9486, "precisao": 10, "local_nome": "Perto da Reitoria" }
+```
+
+Resposta: `{ "id": 7, "animal_id": 1 }`.
+
+| Campo | Obrigatório | Regra |
 | --- | --- | --- |
-| `nome_popular` | string | Obrigatório (no formulário). |
-| `nome_cientifico` | string | |
-| `breve_descricao` | string | Obrigatório (no formulário). |
-| `estado_conservacao` | string | |
-| `habito` | string | |
-| `vocalizacao_postura` | string | |
-| `peconhento` | checkbox / string | Enviar `"on"` se marcado. |
-| `aviso_seguranca` | string | |
-| `protocolo_incidente` | string | |
-| `contatos_resgate` | string | |
-| `raridade` | inteiro de 1 a 5 | O banco rejeita valores fora desse intervalo. |
-| `bitmap_id` | inteiro | Obrigatório (no formulário). Ver seção 6. |
-| `imagem` | arquivo binário | Foto da espécie. Obrigatória (no formulário). |
+| `animal_id` | sim | Número maior que 0, de um animal que existe (`404` se não existir) |
+| `latitude` | sim | De -90 a 90 |
+| `longitude` | sim | De -180 a 180 |
+| `precisao` | não | De 0 a 100000 (metros) |
+| `local_nome` | não | Até 120 caracteres |
 
-#### Comportamento atual
+Limite: **1 avistamento a cada 10 segundos por IP** (`429` se passar). Mostre uma mensagem amigável.
 
-- **Validação:** o servidor não verifica campos obrigatórios. Uma requisição enviada diretamente à API, sem passar pelo formulário, é gravada mesmo com `nome_popular`, `breve_descricao`, `bitmap_id` ou `imagem` ausentes ou vazios.
-- **Imagem:** o servidor aceita arquivos em JPEG ou PNG, recorta o centro da imagem na proporção 3:4, redimensiona para 450 x 600 pixels e a salva em JPEG. A qualidade começa em 85 e é reduzida em passos de 5 até o arquivo ficar com no máximo 16 KB; a redução para ao atingir a qualidade mínima (10), mesmo que o arquivo ainda ultrapasse esse tamanho.
-- **Imagem ausente ou inválida:** se a imagem não for enviada ou não puder ser lida, o servidor não retorna erro. Ele grava uma imagem padrão (placeholder verde) no lugar.
-- **Peçonhento:** o campo `peconhento` é gravado como verdadeiro apenas quando o valor enviado é `"on"`. Qualquer outro valor, ou a ausência do campo, é gravado como falso.
-- **Raridade:** o banco só aceita valores de 1 a 5 no campo `raridade`.
+### 5.4 Rotas antigas (continuam funcionando)
 
-## 6. Referência: Bitmap ID
+`POST /api/relato` e `GET /api/relatos` (lista plana com latitude e longitude). Prefira as rotas novas, porque as antigas devem sair no futuro.
 
-O `bitmap_id` agrupa as características do animal em uma única soma baseada em potências de 2. Para cadastrar um animal, some apenas os valores das características que correspondem a ele. O mesmo esquema de bits forma a máscara (`mask`) do endpoint 4.
+## 6. Usuários
 
-| Característica | Valor (bit) |
-| --- | --- |
-| No alto (árvores/telhados) | 1 |
-| No chão (grama/asfalto) | 2 |
-| Na água ou margem | 4 |
-| É um pássaro / ave | 8 |
-| É uma coruja | 16 |
-| É um cágado / tartaruga | 32 |
-| É um lagarto | 64 |
-| É uma cobra / serpente | 128 |
-| É um mamífero | 256 |
+| Rota | Método | O que faz |
+| --- | --- | --- |
+| `/api/users/register` | POST | Cadastra: `nome_usuario`, `cpf`, `email`, `senha`. Devolve `{ token, usuario }` |
+| `/api/users/login` | POST | Entra: `identificador` (nome de usuário ou e-mail) e `senha`. Devolve `{ token, usuario }` |
+| `/api/users/me` | GET | Perfil de quem está logado (com `Authorization: Bearer <token>`) |
+| `/api/users/logout` | POST | Encerra a sessão (com `Authorization`) |
 
-**Exemplo:** um pássaro (8) que vive no chão (2) tem `bitmap_id` = 8 + 2 = 10.
+Regras do cadastro: nome de usuário com 3 a 20 caracteres (letras, números e `_`), CPF válido, e-mail válido e senha de 8 a 72 caracteres. O CPF volta sempre mascarado (`***.887.014-**`). Cadastro e login juntos aceitam 10 tentativas a cada 5 minutos por IP.
 
-## 7. Tratamento de erros
+O `api.js` já guarda o token com o `expo-secure-store` e envia o cabeçalho `Authorization` nas chamadas com `auth: true`.
 
-> **EM DESENVOLVIMENTO.** O tratamento e a padronização das respostas de erro serão definidos em uma etapa futura e documentados nesta seção.
+## 7. Funções sugeridas para o `api.js`
 
-## 8. Segurança
+Seguem o estilo atual do arquivo (funções nomeadas, usando `chamar` e `FAUNA_URL`):
 
-> **Sem autenticação:** o endpoint `POST /api/animal/create` não exige autenticação. Quem tiver acesso à URL do servidor consegue cadastrar espécies no banco. Defina a proteção desse endpoint (por exemplo, uma chave de administrador) antes de publicar o servidor na internet.
+```js
+export async function idsDosAnimais() {
+  return chamar(FAUNA_URL, '/api/animais/ids');
+}
+
+export async function listarAnimaisCompletos() {
+  const lista = await chamar(FAUNA_URL, '/api/animais');
+  return lista.map(comUrlCompleta);
+}
+
+export async function listarAvistamentos(animalId) {
+  const filtro = animalId ? `?animal_id=${animalId}` : '';
+  return chamar(FAUNA_URL, `/api/avistamentos${filtro}`);
+}
+
+export async function buscarAvistamento(id) {
+  return chamar(FAUNA_URL, `/api/avistamento?id=${id}`);
+}
+
+export async function registrarAvistamento({ animal_id, latitude, longitude, precisao, local_nome }) {
+  return chamar(FAUNA_URL, '/api/avistamento', {
+    method: 'POST',
+    body: { animal_id, latitude, longitude, precisao, local_nome },
+  });
+}
+```
+
+## 8. Dados de exemplo (para o "avistamento mocado")
+
+Enquanto a tela não chama a API, use este mesmo formato, para trocar depois sem refazer a tela:
+
+```js
+export const IDS_MOCK = [1, 2];
+
+export const AVISTAMENTOS_MOCK = [
+  { animal_id: 1, avistamentos: [{ long: -34.9486, lat: -8.0178 }, { long: -34.9503, lat: -8.0152 }] },
+  { animal_id: 2, avistamentos: [] },
+];
+```
+
+## 9. O que ainda não existe na API
+
+- **Pontos de saúde (RF06):** não há tabela nem rota. Por enquanto, a lista com nome e coordenadas fica no próprio app.
+- **Foto no avistamento:** a API grava a posição, a precisão e o nome do local, mas não recebe foto.
+- **Privacidade:** as coordenadas voltam exatas e sem login. Se houver espécies raras ou perigosas, avise o back-end para arredondar.
