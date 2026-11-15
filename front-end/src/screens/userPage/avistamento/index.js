@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
+import { Ionicons } from "@expo/vector-icons";
 
 import style from "./styled";
 // placeholder da API:
@@ -12,9 +13,7 @@ import style from "./styled";
 export default () => {
   const navigation = useNavigation();
 
-  // para o formulário
   const [animalId, setAnimalId] = useState("");
-  const [tipoOcorrencia, setTipoOcorrencia] = useState("");
   const [descricao, setDescricao] = useState("");
   
   // localização e mapa 
@@ -58,7 +57,6 @@ export default () => {
   };
 
   const confirmarLocalizacao = () => {
-    // guarda a coordenada exata do centro do mapa (onde o pino virtual está apontando)
     setCoordenadas({
       latitude: regiaoMapa.latitude,
       longitude: regiaoMapa.longitude,
@@ -67,16 +65,17 @@ export default () => {
   };
 
   const salvarOcorrencia = async () => {
-    if (!animalId || !tipoOcorrencia || !coordenadas) {
-      Alert.alert("Atenção", "Preencha a identificação, o tipo de ocorrência e marque o local.");
+    if (!animalId || !coordenadas) {
+      Alert.alert("Atenção", "Preencha a identificação e marque o local.");
       return;
     }
 
     try {
       setLoading(true);
-      const payload = { animalId, tipoOcorrencia, descricao, coordenadas };
+      //id, descrição e as coordenadas
+      const payload = { animalId, descricao, coordenadas };
       console.log("Dados prontos para envio:", payload);
-      // await registrarOcorrencia(payload);
+      // registrarOcorrencia(payload);
       Alert.alert("Sucesso", "Ocorrência registrada com sucesso!");
       navigation.goBack();
     } catch (err) {
@@ -89,36 +88,40 @@ export default () => {
 
   return (
     <SafeAreaView style={style.SafeAreaView}>
-      <View style={style.formContainer}>
-        <Text style={style.title}>Nova Ocorrência</Text>
+      
+      {/* CABEÇALHO */}
+      <View style={style.header}>
+        <View style={style.headerSpacer} />
+        
+        <View style={style.headerTitleBox}>
+          <Text style={style.headerTitleText}>NOVA OCORRÊNCIA</Text>
+        </View>
 
+        <TouchableOpacity onPress={() => navigation.goBack()} style={style.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={style.formContainer}>
         <TextInput
           style={style.input}
           placeholder="ID do Animal ou Brinco..."
-          placeholderTextColor="#ccc"
+          placeholderTextColor="#E0E0E0"
           value={animalId}
           onChangeText={setAnimalId}
         />
 
         <TextInput
-          style={style.input}
-          placeholder="Tipo (Ex: Doença, Fuga, Vacinado)..."
-          placeholderTextColor="#ccc"
-          value={tipoOcorrencia}
-          onChangeText={setTipoOcorrencia}
-        />
-
-        <TextInput
           style={[style.input, style.textArea]}
           placeholder="Descrição detalhada..."
-          placeholderTextColor="#ccc"
+          placeholderTextColor="#E0E0E0"
           value={descricao}
           onChangeText={setDescricao}
           multiline
           numberOfLines={4}
         />
 
-        {/* Bloco de Localização */}
+        {/* bloco de localização */}
         <View style={style.locationCard}>
           <Text style={style.locationTitle}>Localização da Ocorrência</Text>
           {coordenadas ? (
@@ -141,12 +144,12 @@ export default () => {
         </View>
       </View>
 
-      {/* Botão Fixo de Submissão no Rodapé */}
+      {/* Botão de submissão*/}
       <TouchableOpacity style={style.submitButton} onPress={salvarOcorrencia}>
         <Text style={style.submitButtonText}>Gravar Ocorrência</Text>
       </TouchableOpacity>
 
-      {/* Loading Overlay Geral */}
+      {/* Loading overlay geral */}
       {loading && (
         <View style={style.centerContainer}>
           <ActivityIndicator size="large" color="#FFFFFF" />
@@ -154,7 +157,7 @@ export default () => {
         </View>
       )}
 
-      {/* Modal de Ecrã Inteiro para o Mapa */}
+      {/* tela inteira para o Mapa */}
       <Modal visible={mapaVisivel} animationType="slide" transparent={false}>
         <View style={style.mapContainer}>
           {regiaoMapa && (
@@ -166,7 +169,6 @@ export default () => {
             />
           )}
           
-          {/* Pino fixo no centro do ecrã simulando o marcador */}
           <View style={style.fixedMarker}>
             <View style={style.markerDot} />
             <View style={style.markerStick} />

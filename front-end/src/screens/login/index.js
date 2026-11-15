@@ -11,8 +11,8 @@ import * as Api from "../../../services/API"
 export default () => {
 
     const [imagePassowrd, setImagePassowrd] = useState("eye-off");
-    const [passowrdFild, setPassowrdFild] = useState("");
-    const [emailFild, setEmailFild] = useState("");
+    const [passowrdFild, setPassowrdFild] = useState("Souza500");
+    const [emailFild, setEmailFild] = useState("nivanirfrancisco@gmail.com");
     const [seePassowrd, setSeePassowrd] = useState(true);
     const [loading, setLoading] = useState(false);
 
@@ -63,16 +63,20 @@ export default () => {
 
     return (
         <SafeAreaView style={styled.safeArea}>
-            <View style= {styled.inputArea}>
-                <Image style= {{ width: 128, height:128, alignSelf: 'center'}}source={{uri: "https://github.com/rafael9577/discoveryRural/blob/main/front-end/assets/logoDiscoveryRuralWhite.png?raw=true"}} /> 
+            <View style={styled.inputArea}>
+                <Image 
+                    style={{ width: 128, height: 128, alignSelf: 'center', marginBottom: 20 }} 
+                    source={{uri: "https://github.com/rafael9577/discoveryRural/blob/main/front-end/assets/logoDiscoveryRuralWhite.png?raw=true"}} 
+                /> 
+                
                 <View style={styled.singInPut}>
                     <TextInput 
                         style={styled.textInput}
-                        placeholder="Digitel seu login/Email"
+                        placeholder="Digite seu login/Email"
                         placeholderTextColor='#5E6737'
                         value={emailFild}
                         onChangeText={t => setEmailFild(t)}
-                        />
+                    />
                 </View>
                 
                 <View style={styled.singInPut}>
@@ -84,36 +88,36 @@ export default () => {
                         secureTextEntry={seePassowrd}
                         onChangeText={t => setPassowrdFild(t)}
                     />
-                    <TouchableOpacity  style={{ marginRight: 12 }} onPress={visibiliyPassowrd}>
-                        <Feather name={imagePassowrd} size={20} color="black"/>
+                    <TouchableOpacity style={{ marginRight: 15 }} onPress={visibiliyPassowrd}>
+                        <Feather name={imagePassowrd} size={20} color="#0A5133"/>
                     </TouchableOpacity>
                 </View>
                 
                 <Text style={styled.forgotPassowrd}>Esqueci a senha</Text>
                 
-                <TouchableOpacity style={styled.custtomButton} onPress={handleLoginButtonClick}>
+                <TouchableOpacity style={styled.custtomButton} onPress={handleLoginButtonClick} activeOpacity={0.8}>
                     <Text style={styled.customButtontext}>Login</Text>
                 </TouchableOpacity>
             </View>
         
-            <View  >
+            <View>
                 <TouchableOpacity onPress={tosignUp} style={styled.singMessageButto}>
-                    <Text > Ainda não possui uma conta? </Text>
+                    <Text style={styled.singMessageButtonText}>Ainda não possui uma conta?</Text>
                     <Text style={styled.singMessageButtonTextBold}>Cadastre-se</Text>
                 </TouchableOpacity>    
             </View>
 
             {loading && (
                 <View style={styled.loadingOverlay}>
-                    <ActivityIndicator size={'large'} color="#0000ff" />
+                    <ActivityIndicator size={'large'} color="#A7F3D0" />
                 </View>
             )}
+            
             <Modal
                 transparent={true}
                 animationType='none'
                 visible={loading}
             />
-
         </SafeAreaView>
     );
 };
