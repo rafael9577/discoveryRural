@@ -17,7 +17,7 @@ const Linha = ({ rotulo, valor }) =>
 export default ({ navigation, route }) => {
   const { id, resumo } = route.params || {};
 
-  const [animal, setAnimal] = useState(resumo || null); // já mostra o resumo enquanto carrega
+  const [animal, setAnimal] = useState(resumo || null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalVisivel, setModalVisivel] = useState(false);
@@ -40,11 +40,11 @@ export default ({ navigation, route }) => {
     carregar();
   }, [id]);
 
-    const a = animal || {};
+  const a = animal || {};
   const nome = a.nome_popular || "Sem nome";
   const cientifico = a.nome_cientifico;
-  const peso = a.peso_medio;       // a API ainda não envia
-  const tamanho = a.tamanho_medio; // a API ainda não envia
+  const peso = a.peso_medio;
+  const tamanho = a.tamanho_medio;
   const descricao = a.breve_descricao;
   const habito = a.habito;
   const conservacao = a.estado_conservacao;
@@ -56,14 +56,19 @@ export default ({ navigation, route }) => {
   const resgate = a.contatos_resgate;
   const urlImagem = a.imagem_url || "https://via.placeholder.com/300x180?text=Sem+Imagem";
 
-  
   return (
     <SafeAreaView style={styled.safeArea}>
-      <View style={styled.containerCabecalho}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={28} color="#FFFFFF" />
+      
+      <View style={styled.header}>
+        <View style={styled.headerSpacer} />
+        
+        <View style={styled.headerTitleBox}>
+          <Text style={styled.headerTitleText}>INFORMAÇÕES</Text>
+        </View>
+
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styled.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styled.tituloCabecalho}>Informações do animal</Text>
       </View>
 
       {error && !animal ? (
@@ -122,9 +127,14 @@ export default ({ navigation, route }) => {
                 </>
               ) : null}
 
+              {/* CARD DE AVISO*/}
               {aviso || protocolo || resgate ? (
                 <View style={styled.containerAviso}>
-                  <Ionicons name="warning" size={20} color="#D84315" style={styled.iconeAviso} />
+                  <View style={styled.cabecalhoAviso}>
+                    <Ionicons name="warning" size={20} color="#FFB74D" style={styled.iconeAviso} />
+                    <Text style={styled.tituloAvisoDestaque}>Atenção</Text>
+                  </View>
+                  
                   {aviso ? (
                     <>
                       <Text style={styled.tituloAviso}>Aviso de Segurança: </Text>
@@ -138,10 +148,10 @@ export default ({ navigation, route }) => {
                     </>
                   ) : null}
                   {resgate ? (
-                    <View style={styled.cabecalhoAviso}>
+                    <>
                       <Text style={styled.tituloAviso}>Resgate: </Text>
                       <Text style={styled.textoAviso}>{resgate}</Text>
-                    </View>
+                    </>
                   ) : null}
                 </View>
               ) : null}

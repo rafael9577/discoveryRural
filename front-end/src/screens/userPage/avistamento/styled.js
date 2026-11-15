@@ -7,31 +7,59 @@ export default StyleSheet.create({
         backgroundColor: "#0A5133",
         flex: 1,
     },
-    title: {
-        color: "#FFFFFF",
-        fontSize: 22,
-        fontWeight: "bold",
-        marginBottom: 20,
-        marginLeft: 5,
+    
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        backgroundColor: 'transparent',
+        zIndex: 2, 
     },
+    headerSpacer: {
+        width: 40, 
+    },
+    headerTitleBox: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    headerTitleText: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#FFFFFF', 
+    },
+    backButton: {
+        width: 40,
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#1B5E20',
+        borderRadius: 12,
+        backgroundColor: '#2E7D32',
+    },
+
+    /* FORMULÁRIO E CARDS */
     formContainer: {
         flex: 1,
         width: "95%",
         alignSelf: "center",
-        marginTop: 20,
+        marginTop: 10,
     },
     input: {
         backgroundColor: "#2E7D32",
         borderRadius: 20,
-        borderWidth: 1,
+        borderWidth: 2,
         borderColor: "#1B5E20",
         paddingHorizontal: 15,
-        height: 50,
+        height: 55,
         marginBottom: 15,
         color: "#FFFFFF",
+        fontSize: 16,
     },
     textArea: {
-        height: 100,
+        height: 120,
         textAlignVertical: "top",
         paddingTop: 15,
     },
@@ -41,14 +69,14 @@ export default StyleSheet.create({
         borderRadius: 20,
         borderWidth: 2,
         borderColor: "#1B5E20",
-        marginTop: 10,
+        marginTop: 5,
         alignItems: "center",
     },
     locationTitle: {
         color: "#FFFFFF",
         fontWeight: "bold",
         fontSize: 16,
-        marginBottom: 5,
+        marginBottom: 10,
     },
     locationCoords: {
         color: "#E0E0E0",
@@ -56,6 +84,8 @@ export default StyleSheet.create({
         marginBottom: 15,
         textAlign: "center",
     },
+    
+    /* BOTÕES */
     mapButton: {
         backgroundColor: "#268596",
         paddingVertical: 12,
@@ -70,12 +100,12 @@ export default StyleSheet.create({
         fontSize: 16,
     },
     submitButton: {
-        backgroundColor: "#1B5E20",
-        margin: 20,
+        backgroundColor: "#268596",
+        width: "95%",
+        alignSelf: 'center',
         paddingVertical: 15,
         borderRadius: 20,
-        borderWidth: 1,
-        borderColor: "#FFFFFF",
+        marginBottom: 20,
     },
     submitButtonText: {
         color: "#FFFFFF",
@@ -97,7 +127,6 @@ export default StyleSheet.create({
         marginTop: 10,
         fontWeight: "bold",
     },
-
     mapContainer: {
         flex: 1,
     },

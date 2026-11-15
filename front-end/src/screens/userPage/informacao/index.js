@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, TextInput, Image, ActivityIndicator, FlatList, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import { Feather } from '@expo/vector-icons';
 
-import style from "./style";
+import styles from "./styled";
 import { listarAnimais } from "../../../../services/API"; 
 
 export default () => {
@@ -40,49 +41,61 @@ export default () => {
     return nome.includes(termo) || descricao.includes(termo);
   });
 
-    const renderCardItem = ({ item }) => (
+  const renderCardItem = ({ item }) => (
     <TouchableOpacity
-      style={style.cardContainer}
+      style={styles.cardContainer}
       onPress={() => navigation.navigate("animalDetalhe", { id: item.id, resumo: item })}
       activeOpacity={0.8}
     >
       <Image
         source={{ uri: item.imagem_url || "https://via.placeholder.com/300x180?text=Sem+Imagem" }}
-        style={style.cardImage}
+        style={styles.cardImage}
         resizeMode="cover"
       />
-      <View style={style.cardTextArea}>
-        <Text style={style.cardTitle}>{item.nome || item.nome_popular || "Sem nome"}</Text>
-        <Text style={style.cardDescription} numberOfLines={3}>
+      <View style={styles.cardTextArea}>
+        <Text style={styles.cardTitle}>{item.nome || item.nome_popular || "Sem nome"}</Text>
+        <Text style={styles.cardDescription} numberOfLines={3}>
           {item.breve_descricao || item.descricao || item.especie || "Sem descrição disponível."}
         </Text>
       </View>
     </TouchableOpacity>
   );
 
-
   return (
-    <SafeAreaView style={style.SafeAreaView}>
-      <View style={style.busca}>
-        <TextInput 
-          style={style.buscaInput} 
-          placeholder="Busca por nome ou espécie..." 
-          value={buscaTexto}                
-          onChangeText={setBuscaTexto}      
-          autoCapitalize="none"
-        />
+    <SafeAreaView style={styles.safeArea}>
+      
+      <View style={styles.header}>
+        <View style={styles.headerSpacer} />
+        <View style={styles.headerTitleBox}>
+          <Text style={styles.headerTitleText}>ENCICLOPÉDIA</Text>
+        </View>
+        <View style={styles.headerSpacer} />
+      </View>
+
+      <View style={styles.buscaContainer}>
+        <View style={styles.buscaInputWrapper}>
+          <Feather name="search" size={20} color="#0A5133" style={styles.buscaIcon} />
+          <TextInput 
+            style={styles.buscaInput} 
+            placeholder="Busca por nome ou espécie..." 
+            placeholderTextColor="#5E6737"
+            value={buscaTexto}                
+            onChangeText={setBuscaTexto}      
+            autoCapitalize="none"
+          />
+        </View>
       </View>
 
       {loading ? (
-        <View style={style.centerContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-          <Text style={style.loadingText}>Carregando animais...</Text>
+        <View style={styles.centerContainer}>
+          <ActivityIndicator size="large" color="#A7F3D0" />
+          <Text style={styles.loadingText}>Carregando animais...</Text>
         </View>
       ) : error ? (
-        <View style={style.centerContainer}>
-          <Text style={style.errorText}>{error}</Text>
-          <TouchableOpacity style={style.retryButton} onPress={carregarAnimais}>
-            <Text style={style.retryButtonText}>Tentar Novamente</Text>
+        <View style={styles.centerContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={carregarAnimais}>
+            <Text style={styles.retryButtonText}>Tentar Novamente</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -92,18 +105,20 @@ export default () => {
             keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
             renderItem={renderCardItem}
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 20 }}
             ListEmptyComponent={
-              <View style={style.centerContainer}>
-                <Text style={style.emptyText}>Nenhum animal encontrado.</Text>
+              <View style={styles.centerContainer}>
+                <Text style={styles.emptyText}>Nenhum animal encontrado.</Text>
               </View>
             }
           />
         </View>
       )}
+      
       <Modal 
-            transparent={true}
-            animationType='none'
-            visible={loading}
+        transparent={true}
+        animationType='none'
+        visible={loading}
       />
     </SafeAreaView>
   );

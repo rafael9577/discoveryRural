@@ -14,8 +14,10 @@ func main() {
 	adminKey := os.Getenv("ADMIN_KEY")
 
 	registrarAnimais(adminKey)
+	registrarAnimaisPadrao(adminKey)
 	registrarUsuarios(adminKey)
 	registrarRelatos()
+	registrarAvistamentos()
 
 	port := os.Getenv("PORT")
 	if port == "" {

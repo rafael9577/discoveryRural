@@ -2,45 +2,56 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   safeArea: {
-    backgroundColor: "#0A5133",
+    backgroundColor: "#0A5133", 
     flex: 1,
-    alignItems: "center",
   },
 
-  containerCabecalho: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 20,
-    paddingHorizontal: 20,
-    width: "100%",
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: 'transparent',
+    zIndex: 2, 
   },
-  tituloCabecalho: {
+  headerSpacer: {
+    width: 40,
+  },
+  headerTitleBox: {
     flex: 1,
-    textAlign: "center",
+    alignItems: 'center',
+  },
+  headerTitleText: {
     fontSize: 22,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-    marginRight: 28,
+    fontWeight: 'bold',
+    color: '#FFFFFF', 
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#1B5E20',
+    borderRadius: 12,
+    backgroundColor: '#2E7D32',
   },
 
   suporteCartao: {
-    width: "90%",
+    width: "95%",
     flex: 1,
     alignSelf: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   containerPrincipal: {
     width: "100%",
-    backgroundColor: "#D9D9D9",
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: "#000000",
+    backgroundColor: "#2E7D32",
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "#1B5E20",
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    paddingBottom: 15,
   },
 
   blocoSuperior: {
@@ -50,40 +61,35 @@ export default StyleSheet.create({
   imagemAnimal: {
     width: 100,
     height: 100,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#A0A0A0",
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#1B5E20",
   },
   divisorVertical: {
     width: 2,
-    backgroundColor: "#000000",
+    backgroundColor: "#1B5E20",
     marginHorizontal: 12,
   },
   containerInformacoes: {
     flex: 1,
+    justifyContent: "center",
   },
   nomeAnimal: {
     fontWeight: "bold",
     textTransform: "uppercase",
-    fontSize: 14,
-    color: "#000000",
+    fontSize: 16,
+    color: "#FFFFFF",
   },
   divisorHorizontal: {
     height: 2,
-    backgroundColor: "#000000",
-    marginVertical: 4,
+    backgroundColor: "#1B5E20",
+    marginVertical: 6,
   },
   nomeCientifico: {
     fontStyle: "italic",
     fontSize: 12,
     marginBottom: 6,
-    color: "#222222",
-  },
-  textoInformacao: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#000000",
-    marginTop: 2,
+    color: "#E0E0E0",
   },
   linhaInformacao: {
     flexDirection: "row",
@@ -91,28 +97,27 @@ export default StyleSheet.create({
     alignItems: "center",
     marginTop: 4,
   },
+  textoInformacao: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#E0E0E0",
+  },
   valorInformacao: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "#333333",
+    color: "#FFFFFF",
   },
 
   blocoDescricao: {
-    padding: 15,
-    borderTopWidth: 1,
-    borderTopColor: "#A0A0A0",
-  },
-  tituloDescricao: {
-    fontSize: 15,
-    fontWeight: "bold",
-    color: "#000000",
-    marginTop: 12,
-    marginBottom: 8,
+    paddingHorizontal: 15,
+    paddingTop: 15,
+    borderTopWidth: 2,
+    borderTopColor: "#1B5E20",
   },
   tituloDescricao2: {
     fontSize: 15,
     fontWeight: "bold",
-    color: "#333333",
+    color: "#FFFFFF",
     marginBottom: 8,
   },
   linhaInformacao2: {
@@ -124,12 +129,18 @@ export default StyleSheet.create({
   textoInformacao2: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#000000",
-    marginTop: 2,
+    color: "#E0E0E0",
   },
   valorInformacao2: {
     fontSize: 14,
-    color: "#333333",
+    color: "#FFFFFF",
+  },
+  tituloDescricao: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#E0E0E0",
+    marginTop: 12,
+    marginBottom: 4,
   },
 
   containerAviso: {
@@ -148,16 +159,22 @@ export default StyleSheet.create({
   iconeAviso: {
     marginRight: 6,
   },
+  tituloAvisoDestaque: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "#FFB74D",
+  },
   tituloAviso: {
     fontWeight: "bold",
     fontSize: 14,
-    color: "#BF360C",
-    marginTop: 4,
+    color: "#FFB74D",
+    marginTop: 8,
   },
   textoAviso: {
     fontSize: 13,
-    color: "#BF360C",
+    color: "#FFE0B2",
     marginTop: 2,
+    marginBottom: 4,
   },
 
   modalContainer: {

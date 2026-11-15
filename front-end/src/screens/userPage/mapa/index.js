@@ -10,7 +10,6 @@ import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styled';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // placeholder da posição de animais e suas coordenadas, serve para o banco de dados
@@ -51,14 +50,14 @@ export default () => {
   const pontosHeatmap = dadosFiltrados.map(animal => ({
     latitude: animal.latitude,
     longitude: animal.longitude,
-    weight: 1 // Peso padrão: 1 registro = peso 1
+    weight: 1 
   }));
 
   // função auxiliar que retorna o design de uma linha do menu de filtro, texto + quadradinho do checkbox
   const renderCheckboxItem = (nomeAnimal) => (
     <TouchableOpacity 
       style={styles.checkboxItemContainer} 
-      onPress={() => toggleAnimal(nomeAnimal)} // oo tocar na linha inteira, marca/desmarca o animal
+      onPress={() => toggleAnimal(nomeAnimal)}
       activeOpacity={0.7}
     >
       <Text style={styles.checkboxItemText}>{nomeAnimal}</Text>
@@ -66,7 +65,7 @@ export default () => {
       {/* caixa visual do Checkbox */}
       <View style={styles.checkboxBox}>
         {animaisSelecionados[nomeAnimal] && (
-          <Feather name="check" size={16} color="#000" /> // mostra o ícone de "V" se estiver selecionado
+          <Feather name="check" size={16} color="#FFFFFF" /> 
         )}
       </View>
     </TouchableOpacity>
@@ -78,8 +77,9 @@ export default () => {
       
       {/* HEADER/CABEÇALHO */}
       <View style={styles.header}>
+        {/* Espaçador invisível para balancear o botão da direita e centralizar o título perfeitamente */}
+        <View style={styles.headerSpacer} />
 
-        {/* nome central da tela */}
         <View style={styles.headerTitleBox}>
           <Text style={styles.headerTitleText}>MAPA RURAL</Text>
         </View>
@@ -89,24 +89,20 @@ export default () => {
           style={[styles.menuButton, menuAberto && styles.menuButtonAtivo]} 
           onPress={() => setMenuAberto(!menuAberto)}
         >
-          <Feather 
-            name="menu" 
-            size={28} 
-            color={menuAberto ? "#FFF" : "#000"} 
-          />
+          <Feather name="menu" size={24} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
 
       {/* AREA PRINCIPAL DO MAPA */}
       <View style={styles.mapContainer}>
         <MapView
-          provider={PROVIDER_GOOGLE} // força o uso do motor do Google maps
+          provider={PROVIDER_GOOGLE}
           style={styles.map}
           initialRegion={{
-            latitude: -8.0142, // coordenada central inicial da UFRPE (placeholder)
-            longitude: -34.9511, // (placeholder)
-            latitudeDelta: 0.015, // define o nível de zoom vertical (placeholder)
-            longitudeDelta: 0.012, // define o nível de zoom horizontal (placeholder)
+            latitude: -8.0142, 
+            longitude: -34.9511, 
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.012, 
           }}
         >
           {/* renderização condicional pt1: se o botão de calor estiver DESLIGADO, desenha os pinos vermelhos incompleto)*/} 
@@ -122,10 +118,10 @@ export default () => {
           {mapaDeCalorAtivo && pontosHeatmap.length > 0 && (
             <Heatmap
               points={pontosHeatmap}
-              radius={40} // tamanho da mancha de cada ponto (placeholder)
-              opacity={0.7} // transparencia da camada de calor (placeholder)
+              radius={40} 
+              opacity={0.7} 
               gradient={{
-                colors: ["#00FF00", "#FF0000"], // do verde (poucos registros) ao vermelho (muitos registros)
+                colors: ["#00FF00", "#FF0000"],
                 startPoints: [0.2, 1],
                 colorMapSize: 256
               }}
@@ -133,7 +129,7 @@ export default () => {
           )}
         </MapView>
 
-        {/* MENU DE SOBREPOSIÇÃO (os filtros) */}
+        {/* MENU DE SOBREPOSIÇÃO (Filtros) */}
         {menuAberto && (
           <View style={styles.overlayMenu}>
             
@@ -159,17 +155,16 @@ export default () => {
               
               {/* itens dinamicos criados pela função auxiliar */}
               {renderCheckboxItem('Cágado-de-barbicha')}
-              <View style={styles.separator} /> {/* Linha divisória fina */}
-              
+              <View style={styles.separator} /> 
               {renderCheckboxItem('Bicho-Preguiça-comum')}
               <View style={styles.separator} />
             </View>
-            
           </View>
         )}
       </View>
-      <TouchableOpacity style={styles.avistamento} onPress={avistamento} >
-        <Text>adiconar avistamento</Text>
+
+      <TouchableOpacity style={styles.avistamento} onPress={avistamento}>
+        <Text style={styles.avistamentoText}>Adicionar Avistamento</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
