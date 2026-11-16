@@ -16,7 +16,6 @@ func main() {
 	registrarAnimais(adminKey)
 	registrarAnimaisPadrao(adminKey)
 	registrarUsuarios(adminKey)
-	registrarRelatos()
 	registrarAvistamentos()
 
 	port := os.Getenv("PORT")
