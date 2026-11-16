@@ -36,7 +36,7 @@ export default StyleSheet.create({
         marginRight: 5,
         marginBottom: 20,
         marginTop: 10,
-        color: "#E0E0E0",
+        color: "#0A5133",
         alignSelf: "flex-end",
         fontWeight: '500',
     },
