@@ -186,4 +186,38 @@ export default StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
     },
+
+    /* ESCOLHA DO ANIMAL */
+    chipsLabel: {
+        color: "#FFFFFF",
+        fontWeight: "bold",
+        marginLeft: 5,
+        marginBottom: 8,
+    },
+    chipsRow: {
+        flexGrow: 0,
+        marginBottom: 15,
+    },
+    chip: {
+        backgroundColor: "#2E7D32",
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: "#1B5E20",
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        marginRight: 8,
+    },
+    chipAtivo: {
+        backgroundColor: "#268596",
+        borderColor: "#FFFFFF",
+    },
+    chipText: {
+        color: "#FFFFFF",
+        fontSize: 15,
+    },
+    chipsErro: {
+        color: "#FFFFFF",
+        marginLeft: 5,
+        marginBottom: 15,
+    },
 });

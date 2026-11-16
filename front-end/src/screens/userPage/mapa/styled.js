@@ -8,7 +8,6 @@ export const styles = StyleSheet.create({
     backgroundColor: '#0A5133', 
   },
   
-  /* HEADER STYLES */
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -60,7 +59,6 @@ export const styles = StyleSheet.create({
     height: '100%',
   },
 
-  /* OVERLAY MENU STYLES */
   overlayMenu: {
     position: 'absolute',
     top: 10,
@@ -145,5 +143,15 @@ export const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "bold",
     fontSize: 16,
-  }
+  },
+  overlayHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#1B5E20', 
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1, // Adicionado para separar
+    borderBottomColor: '#2E7D32', // Adicionado para separar
+  },
 });

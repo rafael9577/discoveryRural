@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, Modal, ActivityIndicator, Alert } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Modal, ActivityIndicator, Alert, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import MapView from "react-native-maps";
@@ -7,25 +7,45 @@ import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 
 import style from "./styled";
-// placeholder da API:
-// import { registrarOcorrencia } from "../../../../services/API";
+import { listarAnimais, registrarAvistamento } from "../../../../services/API";
+
+const mensagemErro = (err) => {
+  const msg = err?.message || "";
+  if (msg.includes("Network request failed")) {
+    return "Sem conexão com o servidor. Verifique a internet e tente de novo.";
+  }
+  return msg || "Não foi possível registrar o avistamento.";
+};
 
 export default () => {
   const navigation = useNavigation();
 
-  const [animalId, setAnimalId] = useState("");
+  const [animais, setAnimais] = useState([]);
+  const [erroAnimais, setErroAnimais] = useState(false);
+  const [animalId, setAnimalId] = useState(null);
   const [descricao, setDescricao] = useState("");
   
-  // localização e mapa 
+   
   const [coordenadas, setCoordenadas] = useState(null);
   const [mapaVisivel, setMapaVisivel] = useState(false);
   const [regiaoMapa, setRegiaoMapa] = useState(null);
 
-  // estados de UI
+ 
   const [loading, setLoading] = useState(false);
   const [obtendoLocalizacao, setObtendoLocalizacao] = useState(false);
 
+  const carregarAnimais = async () => {
+    try {
+      setErroAnimais(false);
+      setAnimais(await listarAnimais());
+    } catch (err) {
+      console.error("Erro ao carregar animais:", err);
+      setErroAnimais(true);
+    }
+  };
+
   useEffect(() => {
+    carregarAnimais();
     solicitarPermissaoLocalizacao();
   }, []);
 
@@ -66,21 +86,24 @@ export default () => {
 
   const salvarOcorrencia = async () => {
     if (!animalId || !coordenadas) {
-      Alert.alert("Atenção", "Preencha a identificação e marque o local.");
+      Alert.alert("Atenção", "Escolha o animal e marque o local.");
       return;
     }
 
     try {
       setLoading(true);
-      //id, descrição e as coordenadas
-      const payload = { animalId, descricao, coordenadas };
-      console.log("Dados prontos para envio:", payload);
-      // registrarOcorrencia(payload);
-      Alert.alert("Sucesso", "Ocorrência registrada com sucesso!");
-      navigation.goBack();
+      
+      await registrarAvistamento({
+        animal_id: animalId,
+        latitude: coordenadas.latitude,
+        longitude: coordenadas.longitude,
+        local_nome: descricao.trim(),
+      });
+      Alert.alert("Sucesso", "Avistamento registrado! Ele já aparece no mapa.");
+      navigation.goBack(); 
     } catch (err) {
       console.error("Erro ao salvar:", err);
-      Alert.alert("Erro", "Não foi possível registrar a ocorrência.");
+      Alert.alert("Não foi possível registrar", mensagemErro(err));
     } finally {
       setLoading(false);
     }
@@ -103,25 +126,36 @@ export default () => {
       </View>
 
       <View style={style.formContainer}>
-        <TextInput
-          style={style.input}
-          placeholder="ID do Animal ou Brinco..."
-          placeholderTextColor="#E0E0E0"
-          value={animalId}
-          onChangeText={setAnimalId}
-        />
+        <Text style={style.chipsLabel}>Animal avistado</Text>
+        {erroAnimais ? (
+          <TouchableOpacity onPress={carregarAnimais}>
+            <Text style={style.chipsErro}>Não foi possível carregar os animais. Toque para tentar de novo.</Text>
+          </TouchableOpacity>
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={style.chipsRow}>
+            {animais.map((a) => (
+              <TouchableOpacity
+                key={a.id}
+                style={[style.chip, animalId === a.id && style.chipAtivo]}
+                onPress={() => setAnimalId(a.id)}
+              >
+                <Text style={style.chipText}>{a.nome_popular}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
 
         <TextInput
           style={[style.input, style.textArea]}
-          placeholder="Descrição detalhada..."
+          placeholder="Local ou descrição (até 120 caracteres)..."
           placeholderTextColor="#E0E0E0"
           value={descricao}
           onChangeText={setDescricao}
+          maxLength={120}
           multiline
           numberOfLines={4}
         />
 
-        {/* bloco de localização */}
         <View style={style.locationCard}>
           <Text style={style.locationTitle}>Localização da Ocorrência</Text>
           {coordenadas ? (
@@ -144,12 +178,12 @@ export default () => {
         </View>
       </View>
 
-      {/* Botão de submissão*/}
-      <TouchableOpacity style={style.submitButton} onPress={salvarOcorrencia}>
+
+      <TouchableOpacity style={style.submitButton} onPress={salvarOcorrencia} disabled={loading}>
         <Text style={style.submitButtonText}>Gravar Ocorrência</Text>
       </TouchableOpacity>
 
-      {/* Loading overlay geral */}
+
       {loading && (
         <View style={style.centerContainer}>
           <ActivityIndicator size="large" color="#FFFFFF" />
@@ -157,7 +191,7 @@ export default () => {
         </View>
       )}
 
-      {/* tela inteira para o Mapa */}
+
       <Modal visible={mapaVisivel} animationType="slide" transparent={false}>
         <View style={style.mapContainer}>
           {regiaoMapa && (

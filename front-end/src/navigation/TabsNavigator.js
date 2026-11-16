@@ -4,7 +4,6 @@ import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context'; // Importado para corrigir o bug dos botões
 
 import sair from '../screens/userPage/sair';
-import home from "../screens/userPage/home";
 import busca from "../screens/userPage/informacao";
 import emergencia from '../screens/userPage/emergencia';
 import mapa from '../screens/userPage/mapa';
@@ -77,7 +76,8 @@ export default () => {
                         } catch (error) {
                             console.log("Erro ao sair:", error);
                         } finally {
-                            navigation.navigate("login");
+
+                            navigation.replace("login");
                         }
                     },
                 }}

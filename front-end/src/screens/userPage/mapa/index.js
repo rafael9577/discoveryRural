@@ -1,21 +1,15 @@
-import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  Switch, 
-} from 'react-native';
+import React, { useState, useCallback, useRef } from 'react';
+import { View, Text, TouchableOpacity, Switch, ScrollView, ActivityIndicator } from 'react-native';
 
 import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { styles } from './styled';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { listarAnimais, listarAvistamentos } from '../../../../services/API';
 
-// placeholder da posição de animais e suas coordenadas, serve para o banco de dados
-const ANIMAIS_MOCK = [
-  { id: '1', nome: 'Cágado-de-barbicha', latitude: -8.0142, longitude: -34.9511 },
-  { id: '2', nome: 'Bicho-Preguiça-comum', latitude: -8.0150, longitude: -34.9490 },
+const HOSPITAIS_MOCK = [
+  { id: 'h1', nome: 'Hospital Preencha 1', latitude: -8.029605, longitude: -34.957707 },
 ];
 
 export default () => {
@@ -25,66 +19,114 @@ export default () => {
     navigation.navigate("avistamento");
   }
 
-  // controle da interface
-  const [menuAberto, setMenuAberto] = useState(false); // controla se o menu lateral está visível ou não
-  const [mapaDeCalorAtivo, setMapaDeCalorAtivo] = useState(false); // alterna entre os marcadores e o heatmap
+  const [menuAberto, setMenuAberto] = useState(false);
+  const [mapaDeCalorAtivo, setMapaDeCalorAtivo] = useState(false);
   
-  // estado do tipo dicionario/objeto para controlar quais animais estão selecionados no filtro
-  const [animaisSelecionados, setAnimaisSelecionados] = useState({
-    'Cágado-de-barbicha': true,
-    'Bicho-Preguiça-comum': false,
-  });
+  const [mostrarHospitais, setMostrarHospitais] = useState(false);
+  const hospitaisRef = useRef(false); 
 
-  // função que ativa ao clicar em um animal no menu, inverte o valor true/false do animal clicado
-  const toggleAnimal = (nomeAnimal) => {
-    setAnimaisSelecionados(prev => ({
-      ...prev,
-      [nomeAnimal]: !prev[nomeAnimal]
-    }));
+  const [animais, setAnimais] = useState([]);
+  const [avistamentos, setAvistamentos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
+
+  const [animaisSelecionados, setAnimaisSelecionados] = useState({});
+
+  const carregar = useCallback(async () => {
+    try {
+      setLoading(true);
+      setErro(null);
+      const [listaAnimais, listaAvistamentos] = await Promise.all([
+        listarAnimais(),
+        listarAvistamentos(),
+      ]);
+      setAnimais(listaAnimais);
+      setAvistamentos(listaAvistamentos);
+      setAnimaisSelecionados(prev => {
+        const novo = {};
+        listaAnimais.forEach(a => { novo[a.id] = prev[a.id] ?? !hospitaisRef.current; });
+        return novo;
+      });
+    } catch (err) {
+      console.error("Erro ao carregar o mapa:", err);
+      setErro("Não foi possível carregar os avistamentos. Toque para tentar de novo.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useFocusEffect(useCallback(() => { carregar(); }, [carregar]));
+
+  const definirMostrarHospitais = (valor) => {
+    hospitaisRef.current = valor;
+    setMostrarHospitais(valor);
   };
 
-  // cria uma nova lista contendo apenas os animais que estão marcados como true no estado "animaisSelecionados"
-  const dadosFiltrados = ANIMAIS_MOCK.filter(animal => animaisSelecionados[animal.nome]);
+  const toggleHospitais = (valor) => {
+    definirMostrarHospitais(valor);
+    if (valor) {
+      setAnimaisSelecionados(prev => {
+        const resetados = {};
+        Object.keys(prev).forEach(id => { resetados[id] = false; });
+        return resetados;
+      });
+      setMapaDeCalorAtivo(false);
+    }
+  };
 
-  // formata os dados filtrados para o formato especifico que o componente <Heatmap> exige latitude, longitude, weight(o peso do negocio, 1 vale 1)
-  const pontosHeatmap = dadosFiltrados.map(animal => ({
-    latitude: animal.latitude,
-    longitude: animal.longitude,
-    weight: 1 
+  const toggleAnimal = (id) => {
+    if (!animaisSelecionados[id]) definirMostrarHospitais(false);
+    setAnimaisSelecionados(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const nomeDoAnimal = {};
+  animais.forEach(a => { nomeDoAnimal[a.id] = a.nome_popular; });
+
+  const dadosFiltrados = avistamentos.filter(a => animaisSelecionados[a.animal_id]);
+
+  const pontosHeatmap = dadosFiltrados.map(a => ({
+    latitude: a.latitude,
+    longitude: a.longitude,
+    weight: 1
   }));
 
-  // função auxiliar que retorna o design de uma linha do menu de filtro, texto + quadradinho do checkbox
-  const renderCheckboxItem = (nomeAnimal) => (
-    <TouchableOpacity 
-      style={styles.checkboxItemContainer} 
-      onPress={() => toggleAnimal(nomeAnimal)}
+  const statusMapa = mostrarHospitais
+    ? null
+    : loading
+    ? 'Carregando avistamentos...'
+    : erro
+      ? erro
+      : avistamentos.length === 0
+        ? 'Nenhum avistamento registrado ainda.'
+        : null;
+
+  const renderCheckboxItem = (animal) => (
+    <TouchableOpacity
+      key={animal.id}
+      style={styles.checkboxItemContainer}
+      onPress={() => toggleAnimal(animal.id)}
       activeOpacity={0.7}
     >
-      <Text style={styles.checkboxItemText}>{nomeAnimal}</Text>
-      
-      {/* caixa visual do Checkbox */}
+      <Text style={styles.checkboxItemText}>{animal.nome_popular}</Text>
+
       <View style={styles.checkboxBox}>
-        {animaisSelecionados[nomeAnimal] && (
-          <Feather name="check" size={16} color="#FFFFFF" /> 
+        {animaisSelecionados[animal.id] && (
+          <Feather name="check" size={16} color="#FFFFFF" />
         )}
       </View>
     </TouchableOpacity>
   );
 
   return (
-    // SafeAreaView garante que o app não fique escondido atrás do entalhe da câmera (notch) em iPhones
     <SafeAreaView style={styles.container}>
       
-      {/* HEADER/CABEÇALHO */}
       <View style={styles.header}>
-        {/* Espaçador invisível para balancear o botão da direita e centralizar o título perfeitamente */}
         <View style={styles.headerSpacer} />
 
         <View style={styles.headerTitleBox}>
           <Text style={styles.headerTitleText}>MAPA RURAL</Text>
         </View>
 
-        {/* botão de abrir/fechar o fenu de filtros (o botão hamburguer) */}
         <TouchableOpacity 
           style={[styles.menuButton, menuAberto && styles.menuButtonAtivo]} 
           onPress={() => setMenuAberto(!menuAberto)}
@@ -105,17 +147,16 @@ export default () => {
             longitudeDelta: 0.012, 
           }}
         >
-          {/* renderização condicional pt1: se o botão de calor estiver DESLIGADO, desenha os pinos vermelhos incompleto)*/} 
-          {!mapaDeCalorAtivo && dadosFiltrados.map(animal => (
+
+          {!mapaDeCalorAtivo && !mostrarHospitais && dadosFiltrados.map(a => (
             <Marker
-              key={animal.id}
-              coordinate={{ latitude: animal.latitude, longitude: animal.longitude }}
-              title={animal.nome}
+              key={a.id}
+              coordinate={{ latitude: a.latitude, longitude: a.longitude }}
+              title={nomeDoAnimal[a.animal_id]}
             />
           ))}
 
-          {/* renderização condicional pt2: se o botão de calor estiver LIGADO e houver dados, desenha a mancha colorida (incompleto) */}
-          {mapaDeCalorAtivo && pontosHeatmap.length > 0 && (
+          {mapaDeCalorAtivo && !mostrarHospitais && pontosHeatmap.length > 0 && (
             <Heatmap
               points={pontosHeatmap}
               radius={40} 
@@ -127,37 +168,80 @@ export default () => {
               }}
             />
           )}
+
+          {/* hospitais: posições fixas de HOSPITAIS_MOCK */}
+          {mostrarHospitais && HOSPITAIS_MOCK.map(hospital => (
+            <Marker
+              key={hospital.id}
+              coordinate={{ latitude: hospital.latitude, longitude: hospital.longitude }}
+              title={hospital.nome}
+              pinColor="blue" 
+            />
+          ))}
+
         </MapView>
+
+        {statusMapa && (
+          <TouchableOpacity
+            disabled={!erro}
+            onPress={carregar}
+            activeOpacity={0.8}
+            style={{
+              position: 'absolute', bottom: 12, alignSelf: 'center',
+              flexDirection: 'row', alignItems: 'center',
+              backgroundColor: '#FFF', borderWidth: 1, borderColor: '#000',
+              borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8,
+              maxWidth: '90%',
+            }}
+          >
+            {loading && <ActivityIndicator size="small" color="#228B22" style={{ marginRight: 8 }} />}
+            <Text style={{ color: '#000' }}>{statusMapa}</Text>
+          </TouchableOpacity>
+        )}
 
         {/* MENU DE SOBREPOSIÇÃO (Filtros) */}
         {menuAberto && (
           <View style={styles.overlayMenu}>
             
-            {/* header interno do menu (controlador do Heatmap) */}
             <View style={styles.overlayHeader}>
               <Text style={styles.overlayHeaderText}>MAPA DE CALOR (On/Off)</Text>
               
-              {/* tnterruptor (toggle) do mapa de calor */}
               <Switch
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
                 thumbColor={mapaDeCalorAtivo ? "#FFF" : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
-                onValueChange={() => setMapaDeCalorAtivo(previousState => !previousState)}
+                onValueChange={(val) => {
+                  setMapaDeCalorAtivo(val);
+                  if (val) definirMostrarHospitais(false);
+                }}
                 value={mapaDeCalorAtivo}
               />
             </View>
 
-            {/* corpo do menu com as opções de filtragem de animais */}
+            <View style={styles.overlayHeader}>
+              <Text style={styles.overlayHeaderText}>UPA</Text>
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={mostrarHospitais ? "#FFF" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleHospitais}
+                value={mostrarHospitais}
+              />
+            </View>
+
             <View style={styles.overlayBody}>
               <View style={styles.filterTitleContainer}>
                 <Text style={styles.filterTitleText}>SELECIONE O ANIMAL</Text>
               </View>
               
-              {/* itens dinamicos criados pela função auxiliar */}
-              {renderCheckboxItem('Cágado-de-barbicha')}
-              <View style={styles.separator} /> 
-              {renderCheckboxItem('Bicho-Preguiça-comum')}
-              <View style={styles.separator} />
+              <ScrollView style={{ maxHeight: 240 }}>
+                {animais.map(animal => (
+                  <View key={animal.id}>
+                    {renderCheckboxItem(animal)}
+                    <View style={styles.separator} />
+                  </View>
+                ))}
+              </ScrollView>
             </View>
           </View>
         )}
